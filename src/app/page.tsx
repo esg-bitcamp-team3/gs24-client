@@ -1,95 +1,179 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+// pages/index.tsx
+"use client";
+import React, { useEffect, useState } from "react";
+import { Box, Flex, useBreakpointValue } from "@chakra-ui/react";
+
+import { motion, Variants } from "framer-motion";
+import { useInView } from "react-intersection-observer";
+
+import FirstPage from "@/components/landing/firstPage";
+import SecondPage from "@/components/landing/secondPage";
+import ThirdPage from "@/components/landing/thirdPage";
+import FourthPage from "@/components/landing/fourthPage";
+
+const MotionBox = motion(Box);
+
+const sectionVariants: Variants = {
+  hidden: (direction: "up" | "down") => ({
+    opacity: 0,
+    y: direction === "down" ? 50 : -50,
+  }),
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6 },
+  },
+};
+
+interface SectionProps {
+  children: React.ReactNode;
+  id?: string;
+}
+
+import { useRef } from "react";
+
+function FullSection({ children, id }: SectionProps) {
+  const { ref, inView } = useInView({
+    threshold: 0.8,
+    triggerOnce: false,
+  });
+
+  const [direction, setDirection] = useState<"up" | "down">("down");
+  const prevScrollY = useRef(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      setDirection(currentScrollY > prevScrollY.current ? "down" : "up");
+      prevScrollY.current = currentScrollY;
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  return (
+    <MotionBox
+      id={id}
+      ref={ref}
+      as="section"
+      scrollSnapAlign="start"
+      // height="full"
+      minH="full"
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      custom={direction}
+      variants={sectionVariants}
+      initial="hidden"
+      animate={inView ? "visible" : "hidden"}
+    >
+      {children}
+    </MotionBox>
+  );
+}
 
 export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [login, setLogin] = useState<boolean>(false);
+  const isMobile = useBreakpointValue({ base: true, md: false });
+  const [activeSection, setActiveSection] = useState("first-landing");
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+  // useEffect(() => {
+  //   const fetchLoginStatus = async () => {
+  //     const status = await checkLogin()
+  //     setLogin(status)
+  //   }
+  //   fetchLoginStatus()
+  // }, [])
+  // // 다음 섹션으로 스크롤
+  // const scrollToNext = () => {
+  //   document.getElementById('section-1')?.scrollIntoView({behavior: 'smooth'})
+  // }
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = [
+        "first-landing",
+        "second-landing",
+        "third-landing",
+        "fourth-landing",
+      ];
+
+      sections.forEach((sectionId) => {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          if (rect.top >= 0 && rect.top <= window.innerHeight / 2) {
+            setActiveSection(sectionId);
+          }
+        }
+      });
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  return (
+    <Box
+      height="100vh"
+      overflowY="scroll"
+      scrollSnapType="y mandatory"
+      css={{
+        "&::-webkit-scrollbar": { display: "none" },
+        scrollBehavior: "smooth",
+      }}
+    >
+      {/* 페이지 인디케이터 */}
+      <Flex
+        direction="column"
+        position="fixed"
+        top="50%"
+        right="40px"
+        transform="translateY(-50%)"
+        zIndex="overlay"
+        gap={3}
+      >
+        {[
+          "first-landing",
+          "second-landing",
+          "third-landing",
+          "fourth-landing",
+        ].map((sectionId, idx) => (
+          <Box
+            key={idx}
+            w="10px"
+            h="10px"
+            borderRadius="full"
+            bg="gray.400"
+            _hover={{ bg: "gray.600" }}
+            cursor="pointer"
+            transition="background-color 0.6s"
+            onClick={() =>
+              document
+                .getElementById(sectionId)
+                ?.scrollIntoView({ behavior: "smooth" })
+            }
           />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+        ))}
+      </Flex>
+      {/* 1️⃣ Hero Section ================================ */}
+      <FullSection id="first-landing">
+        <FirstPage />
+      </FullSection>
+
+      {/* 2️⃣ ESG 데이터 분석 (대시보드 형태) ============================ */}
+      <FullSection id="second-landing">
+        <SecondPage />
+      </FullSection>
+
+      {/* 3️⃣ 점수예측 ============================ */}
+      <FullSection id="third-landing">
+        <ThirdPage />
+      </FullSection>
+
+      {/* 4️⃣ 키워드 ============================ */}
+      <FullSection id="fourth-landing">
+        <FourthPage />
+      </FullSection>
+    </Box>
   );
 }

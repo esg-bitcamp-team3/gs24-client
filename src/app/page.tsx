@@ -10,7 +10,7 @@ import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 // 랜딩 페이지 각 섹션 컴포넌트 import
 import LandingSearchPage from "@/components/landing/landingSearchPage";
 import FirstPage from "@/components/landing/firstPage";
-import SecondPage from "@/components/landing/secondPage";
+import ESGRatingPage from "@/components/landing/ESGRatingPage";
 import ThirdPage from "@/components/landing/thirdPage";
 import FourthPage from "@/components/landing/fourthPage";
 
@@ -35,6 +35,9 @@ interface SectionProps {
 }
 
 import { useRef } from "react";
+import KeyWordTrendPage from "@/components/landing/KeyWordTrendPage";
+import SentimentPage from "@/components/landing/SentimentPage";
+import InterestCorporationPage from "@/components/landing/InterestCorporationPage";
 import { useRouter } from "next/navigation";
 
 // 개별 섹션 구성 함수
@@ -177,94 +180,70 @@ export default function Home() {
   }, []);
 
   return (
-    <>
-      <Box
-        onClick={() => router.push("/login")}
-        // border={"4px solid #000000"}
-        fontWeight={"bold"}
-        borderRadius="4xl"
-        bg={"white"}
-        padding={4}
-        margin={8}
-        position="absolute"
-        // top="20px" // 원하는 만큼 margin
-        right="20px"
-        cursor="pointer"
-        zIndex={1000} // 다른 요소 위에 오도록
+    <Box
+      height="100vh"
+      overflowY="scroll"
+      scrollSnapType="y mandatory"
+      css={{
+        "&::-webkit-scrollbar": { display: "none" },
+        scrollBehavior: "smooth",
+      }}
+    >
+      {/* 페이지 인디케이터 */}
+      <Flex
+        direction="column"
+        position="fixed"
+        top="50%"
+        right="40px"
+        transform="translateY(-50%)"
+        zIndex="overlay"
+        gap={3}
       >
-        Login
-      </Box>
-      <Box
-        height="100vh"
-        overflowY="scroll"
-        scrollSnapType="y mandatory"
-        css={{
-          "&::-webkit-scrollbar": { display: "none" },
-          scrollBehavior: "smooth",
-        }}
-      >
-        {/* 페이지 인디케이터 */}
-        {/* <Flex
-          direction="column"
-          position="fixed"
-          top="50%"
-          right="40px"
-          transform="translateY(-50%)"
-          zIndex="overlay"
-          gap={3}
-        >
-          {[
-          "search-landing", // search-landing 추가
-            "first-landing",
-            "second-landing",
-            "third-landing",
-            "fourth-landing",
-          ].map((sectionId, idx) => (
-            <Box
-              key={idx}
-              w="10px"
-              h="10px"
-              borderRadius="full"
-              bg={activeSection === sectionId ? "green.500" : "gray.400"}
-              _hover={{
-              bg: activeSection === sectionId ? "green.600" : "gray.600",
-            }}
-              cursor="pointer"
-              transition="all 0.3s"
-              onClick={() =>
-                document
-                  .getElementById(sectionId)
-                  ?.scrollIntoView({ behavior: "smooth" })
-              }
-            />
-          ))}
-        </Flex> */}
+        {[
+          "first-landing",
+          "second-landing",
+          "third-landing",
+          "fourth-landing",
+        ].map((sectionId, idx) => (
+          <Box
+            key={idx}
+            w="10px"
+            h="10px"
+            borderRadius="full"
+            bg="gray.400"
+            _hover={{ bg: "gray.600" }}
+            cursor="pointer"
+            transition="background-color 0.6s"
+            onClick={() =>
+              document
+                .getElementById(sectionId)
+                ?.scrollIntoView({ behavior: "smooth" })
+            }
+          />
+        ))}
+      </Flex>
+      <FullSection id="search-landing">
+        <LandingSearchPage />
+      </FullSection>
+      {/* 1️⃣ Hero Section ================================ */}
+      <FullSection id="first-landing">
+        <ESGRatingPage />
+      </FullSection>
 
-        {/* 전체 섹션 구성 */}
-        <FullSection id="search-landing">
-          <LandingSearchPage />
-        </FullSection>
+      {/* 2️⃣ ESG 데이터 분석 (대시보드 형태) ============================ */}
+      <FullSection id="second-landing">
+        <KeyWordTrendPage />
+      </FullSection>
 
-        {/* 1️⃣ Hero Section ================================ */}
-        <FullSection id="first-landing">
-          <FirstPage />
-        </FullSection>
+      {/* 3️⃣ 점수예측 ============================ */}
+      <FullSection id="third-landing">
+        <SentimentPage />
+      </FullSection>
 
-        {/* 2️⃣ ESG 데이터 분석 (대시보드 형태) ============================ */}
-        <FullSection id="second-landing">
-          <SecondPage />
-        </FullSection>
-
-        {/* 3️⃣ 점수예측 ============================ */}
-        <FullSection id="third-landing">
-          <ThirdPage />
-        </FullSection>
-
-        {/* 4️⃣ 키워드 ============================ */}
-        <FullSection id="fourth-landing">
-          <FourthPage />
-        </FullSection>
-      </Box>
-    </>
+      {/* 4️⃣ 키워드 ============================ */}
+      <FullSection id="fourth-landing">
+        <InterestCorporationPage />
+      </FullSection>
+    </Box>
   );
 }

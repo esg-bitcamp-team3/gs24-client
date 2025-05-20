@@ -29,8 +29,3 @@ export interface CorpWithInterest {
   corporation: Corporation;
   interested: boolean;
 }
-
-export interface InterestCategories {
-  interestCorporationId: string;
-  categoryId: string;
-}

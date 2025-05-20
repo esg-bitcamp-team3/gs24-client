@@ -1,5 +1,6 @@
 import { handleApiError } from "../util/handleApiError";
 import { apiClient } from "./apiclient";
+import { Category } from "./interfaces/category";
 import { CompanyInfo, InterestCompanyInfo } from "./interfaces/companyinfo";
 import { Corporation, CorpWithInterest } from "./interfaces/corporation";
 
@@ -128,7 +129,7 @@ export async function getCorporationInfo(id: string) {
 export const getCorporationsWithInterest = async () => {
   try {
     const res = await apiClient.get<CorpWithInterest[]>(
-      "/interestCorporation/corporations"
+      "/interest-corporations/corporations"
     );
     return res.data;
   } catch (err) {
@@ -143,5 +144,14 @@ export const getInterestCorporation = async (id: string) => {
     return res.data;
   } catch (err) {
     handleApiError(err, "관심기업 찾기 실패패");
+  }
+};
+
+export const getMyCategory = async () => {
+  try {
+    const res = await apiClient.get<Category[]>(`/categories/my`);
+    return res.data;
+  } catch (err) {
+    handleApiError(err, "관심기업 등록에 실패했습니다.");
   }
 };

@@ -6,6 +6,7 @@ import { Box, Flex, useBreakpointValue } from "@chakra-ui/react";
 import { motion, Variants } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 
+import LandingSearchPage from "@/components/landing/landingSearchPage";
 import FirstPage from "@/components/landing/firstPage";
 import SecondPage from "@/components/landing/secondPage";
 import ThirdPage from "@/components/landing/thirdPage";
@@ -57,11 +58,12 @@ function FullSection({ children, id }: SectionProps) {
       ref={ref}
       as="section"
       scrollSnapAlign="start"
-      // height="full"
+      height="full"
       minH="full"
       display="flex"
       alignItems="center"
       justifyContent="center"
+      px='20'
       custom={direction}
       variants={sectionVariants}
       initial="hidden"
@@ -92,6 +94,7 @@ export default function Home() {
   useEffect(() => {
     const handleScroll = () => {
       const sections = [
+        "search-landing",
         "first-landing",
         "second-landing",
         "third-landing",
@@ -155,6 +158,10 @@ export default function Home() {
           />
         ))}
       </Flex>
+      <FullSection id="search-landing">
+        <LandingSearchPage />
+      </FullSection>
+
       {/* 1️⃣ Hero Section ================================ */}
       <FullSection id="first-landing">
         <FirstPage />

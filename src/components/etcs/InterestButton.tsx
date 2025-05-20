@@ -29,6 +29,7 @@ const InterestButton = ({ orgId }: InterestButtonProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [categoryList, setCategoryList] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string[]>([]);
+  const [checked, setChecked] = useState(false);
 
   const handleClick = async () => {
     try {
@@ -79,6 +80,8 @@ const InterestButton = ({ orgId }: InterestButtonProps) => {
   useEffect(() => {
     const checkInterest = async () => {
       try {
+        const chkLogin = await checkLogin();
+        setChecked(chkLogin);
         const data = await getInterestCorporation(orgId);
         if (data) {
           setIsInterested(true);
@@ -97,7 +100,13 @@ const InterestButton = ({ orgId }: InterestButtonProps) => {
       <Button
         color="black"
         bg="white"
-        onClick={() => (isInterested ? handleClick() : setIsOpen(true))}
+        onClick={() =>
+          isInterested
+            ? handleClick()
+            : checked
+            ? setIsOpen(true)
+            : alert("로그인 후 이용해주세요.")
+        }
       >
         {isInterested ? <FcLike /> : <FcLikePlaceholder />}
       </Button>

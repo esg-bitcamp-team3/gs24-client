@@ -51,12 +51,13 @@ const Navbar: React.FC = () => {
           cursor="pointer"
         />
       </Box>
+      <ExchangeRateChart />
       <Box display="flex" paddingX="2" alignItems="center">
         <FaSearch aria-atomic />
       </Box>
 
       <Searching />
-      <ExchangeRateChart />
+
       <Box display="flex" alignItems="center" gap="4">
         <Button
           onClick={() => router.push("/dashboard/vocabulary")}

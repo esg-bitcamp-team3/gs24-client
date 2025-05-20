@@ -7,7 +7,7 @@ import { motion, Variants } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 
 import FirstPage from "@/components/landing/firstPage";
-import SecondPage from "@/components/landing/secondPage";
+import ESGRatingPage from "@/components/landing/ESGRatingPage";
 import ThirdPage from "@/components/landing/thirdPage";
 import FourthPage from "@/components/landing/fourthPage";
 
@@ -31,6 +31,9 @@ interface SectionProps {
 }
 
 import { useRef } from "react";
+import KeyWordTrendPage from "@/components/landing/KeyWordTrendPage";
+import SentimentPage from "@/components/landing/SentimentPage";
+import InterestCorporationPage from "@/components/landing/InterestCorporationPage";
 
 function FullSection({ children, id }: SectionProps) {
   const { ref, inView } = useInView({
@@ -157,22 +160,22 @@ export default function Home() {
       </Flex>
       {/* 1️⃣ Hero Section ================================ */}
       <FullSection id="first-landing">
-        <FirstPage />
+        <ESGRatingPage />
       </FullSection>
 
       {/* 2️⃣ ESG 데이터 분석 (대시보드 형태) ============================ */}
       <FullSection id="second-landing">
-        <SecondPage />
+        <KeyWordTrendPage />
       </FullSection>
 
       {/* 3️⃣ 점수예측 ============================ */}
       <FullSection id="third-landing">
-        <ThirdPage />
+        <SentimentPage />
       </FullSection>
 
       {/* 4️⃣ 키워드 ============================ */}
       <FullSection id="fourth-landing">
-        <FourthPage />
+        <InterestCorporationPage />
       </FullSection>
     </Box>
   );

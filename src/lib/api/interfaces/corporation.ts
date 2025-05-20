@@ -30,14 +30,7 @@ export interface CorpWithInterest {
   interested: boolean;
 }
 
-export interface CorporationsWithInterestPage {
-  corpWithInterestDTOList: CorpWithInterest[];
-  hasMore: boolean;
-}
-
-export interface interestCorporation {
-  id: string;
-  userId: string;
-  corporationId: string;
-  checkTime: string;
+export interface InterestCategories {
+  interestCorporationId: string;
+  categoryId: string;
 }

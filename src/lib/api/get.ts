@@ -1,11 +1,7 @@
 import { handleApiError } from "../util/handleApiError";
 import { apiClient } from "./apiclient";
 import { CompanyInfo, InterestCompanyInfo } from "./interfaces/companyinfo";
-import {
-  Corporation,
-  CorporationsWithInterestPage,
-  interestCorporation,
-} from "./interfaces/corporation";
+import { Corporation, CorpWithInterest } from "./interfaces/corporation";
 
 import { EsgRatingResponse } from "./interfaces/esgRating";
 import { EsgTerm } from "./interfaces/esgTerms";
@@ -111,6 +107,14 @@ export async function getEsgTerms() {
 }
 
 // ================================== corporation
+export async function getCorporationList() {
+  try {
+    const response = await apiClient.get<Corporation[]>("/corporations");
+    return response.data;
+  } catch (error) {
+    handleApiError(error, "기업 정보를 가져오는 데 실패했습니다.");
+  }
+}
 
 export async function getCorporationInfo(id: string) {
   try {
@@ -121,11 +125,10 @@ export async function getCorporationInfo(id: string) {
   }
 }
 
-export const getCorporationsWithInterest = async (page: number) => {
+export const getCorporationsWithInterest = async () => {
   try {
-    const res = await apiClient.get<CorporationsWithInterestPage>(
-      "/interestCorporation/corporations",
-      { params: { page } }
+    const res = await apiClient.get<CorpWithInterest[]>(
+      "/interestCorporation/corporations"
     );
     return res.data;
   } catch (err) {
@@ -136,7 +139,7 @@ export const getCorporationsWithInterest = async (page: number) => {
 
 export const getInterestCorporation = async (id: string) => {
   try {
-    const res = await apiClient.get<boolean>(`/interestCorporation/${id}`);
+    const res = await apiClient.get<boolean>(`/interest-corporations/${id}`);
     return res.data;
   } catch (err) {
     handleApiError(err, "관심기업 찾기 실패패");

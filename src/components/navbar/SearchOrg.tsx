@@ -1,19 +1,23 @@
 "use client";
-import { getCorporationsWithInterest } from "@/lib/api/get";
+import { getCorporationList, getCorporationsWithInterest } from "@/lib/api/get";
 import { Box, Button, Input, Dialog, Portal, Text } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
-import React, {
-  ReactNode,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import InterestButton from "../etcs/InterestButton";
-import { CorpWithInterest } from "@/lib/api/interfaces/corporation";
+import {
+  Corporation,
+  CorpWithInterest,
+} from "@/lib/api/interfaces/corporation";
+import { FixedSizeList as List } from "react-window";
+import { checkLogin } from "@/lib/api/auth";
 
 interface SearchOrgProps {
   label: ReactNode;
+}
+interface rowProps {
+  index: number;
+  style: React.CSSProperties;
+  data: CorpWithInterest[];
 }
 
 const SearchOrg = ({ label }: SearchOrgProps) => {
@@ -21,13 +25,6 @@ const SearchOrg = ({ label }: SearchOrgProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [companyList, setCompanyList] = useState<CorpWithInterest[]>([]);
   const [isOpen, setIsOpen] = useState(false);
-
-  const [page, setPage] = useState(0);
-  const [hasMore, setHasMore] = useState(true);
-
-  const [loading, setLoading] = useState(false);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const observerRef = useRef<HTMLDivElement | null>(null);
 
   const handleCompanyClick = (companyId: string) => {
     setIsOpen(false);
@@ -44,57 +41,55 @@ const SearchOrg = ({ label }: SearchOrgProps) => {
             .includes(searchTerm.trim().toLowerCase())
         );
 
-  const loadCompanies = useCallback(async () => {
-    if (loading || !hasMore) return;
-    setLoading(true);
-
+  const loadCompanies = async () => {
     try {
-      const data = await getCorporationsWithInterest(page); // 서버에서 page별 로딩
-      console.log("🔥 data", data);
-
-      setCompanyList((prev) => [...prev, ...data.corpWithInterestDTOList]);
-      setHasMore(data.hasMore);
-      setPage((prev) => prev + 1);
+      const chkLogin = await checkLogin();
+      if (chkLogin) {
+        const data = await getCorporationsWithInterest(); // 서버에서 page별 로딩
+        setCompanyList(data);
+      } else {
+        const data2 = await getCorporationList(); // 서버에서 전체 로딩
+        const withInterestFalse: CorpWithInterest[] = (data2 ?? []).map(
+          (corp) => ({
+            corporation: corp,
+            interested: false,
+          })
+        );
+        setCompanyList(withInterestFalse);
+      }
     } catch (error) {
       console.error("Error fetching companies:", error);
-    } finally {
-      setLoading(false);
     }
-  }, [page, loading, hasMore]);
+  };
   useEffect(() => {
+    if (companyList.length === 0) {
+      loadCompanies();
+    }
     if (isOpen) {
       // 다이얼로그 열리면 초기화
       setSearchTerm("");
-      setPage(0);
-      setCompanyList([]);
-      setHasMore(true);
     }
   }, [isOpen]);
 
-  useEffect(() => {
-    if (isOpen && companyList.length === 0 && page === 0) {
-      // 초기 데이터 로딩
-      loadCompanies();
-    }
-
-    if (!scrollContainerRef.current || !observerRef.current || !isOpen) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && !loading && hasMore) {
-          loadCompanies();
-        }
-      },
-      {
-        root: scrollContainerRef.current,
-        threshold: 1.0,
-      }
+  // 가상화를 위한 row
+  const Row = ({ index, style, data }: rowProps) => {
+    const company = data[index];
+    return (
+      <Box style={style} key={company.corporation.id} display="flex" w="90%">
+        <Button
+          paddingLeft={3}
+          variant="ghost"
+          color="black"
+          justifyContent="flex-start"
+          onClick={() => handleCompanyClick(company.corporation.id)}
+          w="90%"
+        >
+          {company.corporation.corpName}
+        </Button>
+        <InterestButton orgId={company.corporation.id} />
+      </Box>
     );
-
-    observer.observe(observerRef.current);
-
-    return () => observer.disconnect();
-  }, [isOpen, companyList.length, page, loadCompanies, loading, hasMore]);
+  };
 
   return (
     <Dialog.Root
@@ -126,39 +121,21 @@ const SearchOrg = ({ label }: SearchOrgProps) => {
             </Dialog.Header>
 
             <Dialog.Body pt="4">
-              <Box height={300} overflowY="scroll" ref={scrollContainerRef}>
+              <Box height={300}>
                 {filteredCompanies.length === 0 ? (
                   <Text color="gray.500" textAlign="center">
                     No companies found.
                   </Text>
                 ) : (
-                  filteredCompanies.map((company) => (
-                    <Box key={company.corporation.id} display="flex" w="90%">
-                      <Button
-                        paddingLeft={3}
-                        variant="ghost"
-                        color="black"
-                        justifyContent="flex-start"
-                        onClick={() =>
-                          handleCompanyClick(company.corporation.id)
-                        }
-                        w={"100%"}
-                      >
-                        {company.corporation.corpName}
-                      </Button>
-                      <InterestButton
-                        orgId={company.corporation.id}
-                        // interest={company.interested}
-                      />
-                    </Box>
-                  ))
-                )}
-                {/* 스크롤 끝 감지 트리거 */}
-                <Box ref={observerRef} h={"5%"} />
-                {loading && (
-                  <Text textAlign="center" color="gray.500">
-                    Loading...
-                  </Text>
+                  <List
+                    height={300}
+                    itemCount={filteredCompanies.length}
+                    itemSize={50}
+                    width="100%"
+                    itemData={filteredCompanies}
+                  >
+                    {Row}
+                  </List>
                 )}
               </Box>
             </Dialog.Body>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   Box,
   Button,
@@ -7,43 +7,114 @@ import {
   Input,
   Text,
   Icon,
-  Accordion,
 } from "@chakra-ui/react";
-import { FaArrowRight, FaSearch } from "react-icons/fa";
+import { getCorporationList, getCorporationsWithInterest } from "@/lib/api/get";
+import { useRouter } from "next/navigation";
+import { CorpWithInterest } from "@/lib/api/interfaces/corporation";
+import { FixedSizeList as List } from "react-window";
+import { checkLogin } from "@/lib/api/auth";
 import { useClickAway } from "react-use";
-import router from "next/router";
+import { FaArrowRight, FaSearch } from "react-icons/fa";
+
+interface rowProps {
+  index: number;
+  style: React.CSSProperties;
+  data: CorpWithInterest[];
+}
 
 const LandingSearchPage = () => {
+  const router = useRouter();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [companyList, setCompanyList] = useState<CorpWithInterest[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isInputFocused, setIsInputFocused] = useState(false);
-
-  const handleCompanyClick = (companyId: string) => {
-    setIsDropdownOpen(false);
-    router.push(`/dashboard/${companyId}/companyInfo`);
-  };
-  const [searchTerm, setSearchTerm] = useState("");
-  interface Company {
-    id: string;
-    name: string;
-  }
-  const [searchResults, setSearchResults] = useState<Company[]>([]);
-
-  const handleSearch = (value: string) => {
-    setSearchTerm(value);
-    // This is a mock data. Replace with actual API call
-    const mockResults = [
-      { id: "1", name: "삼성전자" },
-      { id: "2", name: "네이버" },
-      { id: "3", name: "카카오" },
-      { id: "4", name: "삼성" },
-    ].filter((company) => company.name.includes(value));
-    setSearchResults(value ? mockResults : []);
-  };
-
-  const ref = React.useRef(null);
+  const ref = useRef(null);
   useClickAway(ref, () => {
-    setSearchResults([]);
+    setIsDropdownOpen(false);
   });
+
+  const handleCompanyClick = (companyId: string, companyName: string) => {
+    setSearchTerm(companyName); // 선택한 회사 이름을 검색창에 설정
+    setIsDropdownOpen(false);
+
+    // 300ms 후에 페이지 이동 (검색어가 표시되는 것을 볼 수 있도록)
+    setTimeout(() => {
+      router.push(`/dashboard/${companyId}/companyInfo`);
+    }, 300);
+  };
+
+  const filteredCompanies =
+    searchTerm.trim() === ""
+      ? []
+      : companyList.filter((company) =>
+          company.corporation.corpName
+            .trim()
+            .toLowerCase()
+            .includes(searchTerm.trim().toLowerCase())
+        );
+
+  const loadCompanies = async () => {
+    try {
+      const chkLogin = await checkLogin();
+      if (chkLogin) {
+        const data = await getCorporationsWithInterest(); // 서버에서 page별 로딩
+        setCompanyList(data);
+      } else {
+        const data2 = await getCorporationList();
+        const withInterestFalse: CorpWithInterest[] = (data2 ?? []).map(
+          (corp) => ({
+            corporation: corp,
+            interested: false,
+          })
+        );
+        setCompanyList(withInterestFalse);
+      }
+    } catch (error) {
+      console.error("Error fetching companies:", error);
+    }
+  };
+  useEffect(() => {
+    if (companyList.length === 0) {
+      loadCompanies();
+    }
+  }, [isDropdownOpen]);
+
+  const Row = ({ index, style, data }: rowProps) => {
+    const company = data[index];
+    return (
+      <Box
+        style={style}
+        key={company.corporation.id}
+        display="flex"
+        w="100%"
+        px="5"
+      >
+        <Button
+          variant="ghost"
+          color="black"
+          justifyContent="flex-start"
+          onClick={() =>
+            handleCompanyClick(
+              company.corporation.id,
+              company.corporation.corpName
+            )
+          }
+          onMouseDown={(e) => e.preventDefault()}
+          w="100%"
+          _hover={{ bg: "gray.50" }}
+          transition="all 0.2s"
+        >
+          <Flex align="center" justify="space-between" width="100%">
+            <Text fontSize="md" fontWeight="medium">
+              {company.corporation.corpName}
+            </Text>
+            <Icon as={FaArrowRight} color="gray.400" />
+          </Flex>
+        </Button>
+      </Box>
+    );
+  };
+
   return (
     <Flex direction="column" width="full" align="center" justify="center">
       <Box textAlign="center" mb="10">
@@ -56,7 +127,7 @@ const LandingSearchPage = () => {
       </Box>
 
       <Flex
-        maxW={isInputFocused ? "1200px" : "1000px"} // 클릭 시 더 넓어짐
+        maxW={isInputFocused ? "1100px" : "1000px"} // 클릭 시 더 넓어짐
         w="100%"
         h="100%"
         bg="white"
@@ -78,12 +149,25 @@ const LandingSearchPage = () => {
               size="lg"
               width="full"
               _placeholder={{ color: "gray.400" }}
-              onFocus={() => setIsInputFocused(true)}
-              onBlur={() => setIsInputFocused(false)}
+              onFocus={() => {
+                setIsInputFocused(true);
+                // 검색어가 있을 때만 드롭다운 열기
+                if (searchTerm.trim() !== "") {
+                  setIsDropdownOpen(true);
+                }
+              }}
+              onBlur={() => {
+                setIsInputFocused(false);
+              }}
               value={searchTerm}
-              onChange={(e) => handleSearch(e.target.value)}
+              onChange={(e) => {
+                const newValue = e.target.value;
+                setSearchTerm(newValue);
+                // 검색어가 있을 때만 드롭다운 열기
+                setIsDropdownOpen(newValue.trim() !== "");
+              }}
             />
-            {searchResults.length > 0 && (
+            {isDropdownOpen && filteredCompanies.length > 0 && (
               <Box
                 position="absolute"
                 top="100%"
@@ -99,31 +183,20 @@ const LandingSearchPage = () => {
                 border="1px"
                 borderColor="gray.100"
               >
-                {searchResults.map((company, index) => (
-                  <Box
-                    key={company.id}
-                    p={4}
-                    _hover={{ bg: "green.50" }}
-                    cursor="pointer"
-                    onClick={() => handleCompanyClick(company.id)}
-                    borderBottom={
-                      index < searchResults.length - 1 ? "1px" : "0"
-                    }
-                    borderColor="gray.100"
-                    transition="all 0.2s"
-                  >
-                    <Flex align="center" justify="space-between">
-                      <Text fontSize="md" fontWeight="medium">
-                        {company.name}
-                      </Text>
-                      <Icon as={FaArrowRight} color="gray.400" />
-                    </Flex>
-                  </Box>
-                ))}
+                <List
+                  height={200}
+                  itemCount={filteredCompanies.length}
+                  itemSize={50}
+                  width="100%"
+                  itemData={filteredCompanies}
+                >
+                  {Row}
+                </List>
               </Box>
             )}
           </Box>
         </Flex>
+
         <Button
           colorScheme="gray"
           size="xl"

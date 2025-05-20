@@ -139,7 +139,7 @@ export const getCorporationsWithInterest = async () => {
 
 export const getInterestCorporation = async (id: string) => {
   try {
-    const res = await apiClient.get<boolean>(`/interestCorporation/${id}`);
+    const res = await apiClient.get<boolean>(`/interest-corporations/${id}`);
     return res.data;
   } catch (err) {
     handleApiError(err, "관심기업 찾기 실패패");

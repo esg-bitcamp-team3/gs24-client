@@ -13,6 +13,7 @@ import KeywordNews from "./KeywordNews";
 import { financeApi } from "@/lib/api/apiclient";
 import { CorporationInfo } from "@/lib/api/interfaces/corporation";
 import { getCorporationInfo } from "@/lib/api/get";
+import CorpTrendCard from "./KeywordTrend";
 
 const KeywordTrendCard = ({ orgId }: { orgId: string }) => {
   const [corporation, setCorporation] = useState<CorporationInfo>();
@@ -77,12 +78,28 @@ const KeywordTrendCard = ({ orgId }: { orgId: string }) => {
       gap={8}
       overflow={"auto"}
     >
-      {/* 긍정 부정 ================================================================== */}
-      <Box {...CARD_STYLES} p={6} w={{ base: "100%", md: "30%" }}>
-        {corporation?.corp_name && (
-          <EmotionCard orgname={corporation?.corp_name} />
-        )}
-      </Box>
+      <Flex justify="space-between" align="center" gap={4} mb={4}>
+        {/* 긍정 부정 ================================================================== */}
+
+        <Box {...CARD_STYLES} p={6} w={{ base: "100%", md: "40%" }} h={"500px"}>
+          <Text {...HEADING_STYLES} textAlign="center">
+            감정 분석 결과
+          </Text>
+          {corporation?.corp_name && (
+            <EmotionCard orgname={corporation?.corp_name} />
+          )}
+        </Box>
+        {/* 언급량 추이 ================================================================== */}
+        <Box {...CARD_STYLES} p={6} w={{ base: "100%", md: "60%" }} h={"500px"}>
+          <Text {...HEADING_STYLES} textAlign="center">
+            기업 언급량 추이
+          </Text>
+          {corporation?.corp_name && (
+            <CorpTrendCard corpName={corporation?.corp_name} />
+          )}
+        </Box>
+      </Flex>
+
       <Flex direction={{ base: "column", md: "row" }} gap={8}>
         {/* 관련 키워드 ================================================================== */}
         <Box {...CARD_STYLES} p={6} w={{ base: "100%", md: "60%" }}>

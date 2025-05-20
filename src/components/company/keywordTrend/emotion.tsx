@@ -9,7 +9,7 @@ interface Props {
 const EmotionCard = ({ orgname }: Props) => {
   const [negative, setNegative] = useState<number>(0);
   const [positive, setPositive] = useState<number>(0);
-  const [emotion, setEmotion] = useState(false);
+  const [emotion, setEmotion] = useState(true);
   const [total, setTotal] = useState<number>(0);
   const [loading, setLoading] = useState(true);
   const display: number = 10;
@@ -46,6 +46,7 @@ const EmotionCard = ({ orgname }: Props) => {
     return (
       <Flex
         p={5}
+        mt={6}
         borderRadius="lg"
         boxShadow="md"
         borderWidth="1px"
@@ -65,17 +66,20 @@ const EmotionCard = ({ orgname }: Props) => {
 
   return (
     <Flex p={5} borderRadius="lg" flexDir="column" width="100%">
-      <Text fontWeight="bold" fontSize="lg" mb={3}>
-        감정 분석 결과
-      </Text>
-
-      <Flex justifyContent="space-between" alignItems="center">
+      <Flex justifyContent="space-between" alignItems="center" mt={6}>
         {emotion ? (
           <>
-            <Flex alignItems="center" gap={3}>
-              <IoMdThumbsUp size={48} color="#3182CE" />
+            <Flex alignItems="center" gap={6}>
+              <Box
+                borderRadius={"xl"}
+                bg="blue.100"
+                p={4}
+                justifyContent={"center"}
+              >
+                <IoMdThumbsUp size={40} color="#3182CE" />
+              </Box>
               <Box>
-                <Text fontSize="sm" color="gray.500">
+                <Text fontSize="md" color="gray.500">
                   긍정적 의견
                 </Text>
                 <Text fontSize="2xl" fontWeight="bold" color="blue.500">
@@ -86,10 +90,17 @@ const EmotionCard = ({ orgname }: Props) => {
           </>
         ) : (
           <>
-            <Flex alignItems="center" gap={3}>
-              <IoMdThumbsDown size={48} color="#E53E3E" />
+            <Flex alignItems="center" gap={6}>
+              <Box
+                borderRadius={"xl"}
+                bg="blue.100"
+                p={4}
+                justifyContent={"center"}
+              >
+                <IoMdThumbsDown size={40} color="#E53E3E" />
+              </Box>
               <Box>
-                <Text fontSize="sm" color="gray.500">
+                <Text fontSize="md" color="gray.500">
                   부정적 의견
                 </Text>
                 <Text fontSize="2xl" fontWeight="bold" color="red.500">
@@ -102,9 +113,9 @@ const EmotionCard = ({ orgname }: Props) => {
       </Flex>
 
       <Flex
-        mt={4}
+        mt={6}
         bg="gray.100"
-        height="10px"
+        height="15px"
         borderRadius="full"
         overflow="hidden"
       >
@@ -123,10 +134,10 @@ const EmotionCard = ({ orgname }: Props) => {
       </Flex>
 
       <Flex justifyContent="space-between" mt={2}>
-        <Text fontSize="xs" color="blue.500">
+        <Text fontSize="sm" color="blue.500">
           긍정 {positive}
         </Text>
-        <Text fontSize="xs" color="red.500">
+        <Text fontSize="sm" color="red.500">
           부정 {negative}
         </Text>
       </Flex>

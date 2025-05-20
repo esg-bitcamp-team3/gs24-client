@@ -16,6 +16,7 @@ import { LuLogOut, LuSearch } from "react-icons/lu";
 import { logout } from "@/lib/api/auth";
 import Searching from "./navbar/searching";
 import { FaSearch } from "react-icons/fa";
+import { ExchangeRateChart } from "./dashboard";
 
 // 백엔드에서 받아온 회사 리스트의 타입을 정의
 
@@ -55,7 +56,7 @@ const Navbar: React.FC = () => {
       </Box>
 
       <Searching />
-
+      <ExchangeRateChart />
       <Box display="flex" alignItems="center" gap="4">
         <Button
           onClick={() => router.push("/dashboard/vocabulary")}
@@ -73,7 +74,7 @@ const Navbar: React.FC = () => {
         >
           <Avatar.Root shape="full" size="lg">
             <Avatar.Fallback name="Segun Adebayo" />
-            <Avatar.Image src="https://cdn.myanimelist.net/r/84x124/images/characters/9/131317.webp?s=d4b03c7291407bde303bc0758047f6bd" />
+            <Avatar.Image src="@public/user.png" />
           </Avatar.Root>
         </div>
         {/* 나가기 버튼================================================================== */}

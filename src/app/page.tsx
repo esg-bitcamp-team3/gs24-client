@@ -1,7 +1,7 @@
 // pages/index.tsx
 "use client";
 import React, { useEffect, useState } from "react";
-import { Box, Flex, useBreakpointValue } from "@chakra-ui/react";
+import { Avatar, Box, Flex, useBreakpointValue } from "@chakra-ui/react";
 
 import { motion, Variants } from "framer-motion";
 import { useInView } from "react-intersection-observer";
@@ -31,6 +31,7 @@ interface SectionProps {
 }
 
 import { useRef } from "react";
+import { useRouter } from "next/navigation";
 
 function FullSection({ children, id }: SectionProps) {
   const { ref, inView } = useInView({
@@ -76,6 +77,7 @@ export default function Home() {
   const [login, setLogin] = useState<boolean>(false);
   const isMobile = useBreakpointValue({ base: true, md: false });
   const [activeSection, setActiveSection] = useState("first-landing");
+  const router = useRouter();
 
   // useEffect(() => {
   //   const fetchLoginStatus = async () => {
@@ -113,67 +115,85 @@ export default function Home() {
   }, []);
 
   return (
-    <Box
-      height="100vh"
-      overflowY="scroll"
-      scrollSnapType="y mandatory"
-      css={{
-        "&::-webkit-scrollbar": { display: "none" },
-        scrollBehavior: "smooth",
-      }}
-    >
-      {/* 페이지 인디케이터 */}
-      <Flex
-        direction="column"
-        position="fixed"
-        top="50%"
-        right="40px"
-        transform="translateY(-50%)"
-        zIndex="overlay"
-        gap={3}
+    <>
+      <Box
+        onClick={() => router.push("/login")}
+        // border={"4px solid #000000"}
+        fontWeight={"bold"}
+        borderRadius="4xl"
+        bg={"white"}
+        padding={4}
+        margin={8}
+        position="absolute"
+        // top="20px" // 원하는 만큼 margin
+        right="20px"
+        cursor="pointer"
+        zIndex={1000} // 다른 요소 위에 오도록
       >
-        {[
-          "first-landing",
-          "second-landing",
-          "third-landing",
-          "fourth-landing",
-        ].map((sectionId, idx) => (
-          <Box
-            key={idx}
-            w="10px"
-            h="10px"
-            borderRadius="full"
-            bg="gray.400"
-            _hover={{ bg: "gray.600" }}
-            cursor="pointer"
-            transition="background-color 0.6s"
-            onClick={() =>
-              document
-                .getElementById(sectionId)
-                ?.scrollIntoView({ behavior: "smooth" })
-            }
-          />
-        ))}
-      </Flex>
-      {/* 1️⃣ Hero Section ================================ */}
-      <FullSection id="first-landing">
-        <FirstPage />
-      </FullSection>
+        Login
+      </Box>
+      <Box
+        height="100vh"
+        overflowY="scroll"
+        scrollSnapType="y mandatory"
+        css={{
+          "&::-webkit-scrollbar": { display: "none" },
+          scrollBehavior: "smooth",
+        }}
+      >
+        {/* 페이지 인디케이터 */}
+        <Flex
+          direction="column"
+          position="fixed"
+          top="50%"
+          right="40px"
+          transform="translateY(-50%)"
+          zIndex="overlay"
+          gap={3}
+        >
+          {[
+            "first-landing",
+            "second-landing",
+            "third-landing",
+            "fourth-landing",
+          ].map((sectionId, idx) => (
+            <Box
+              key={idx}
+              w="10px"
+              h="10px"
+              borderRadius="full"
+              bg="gray.400"
+              _hover={{ bg: "gray.600" }}
+              cursor="pointer"
+              transition="background-color 0.6s"
+              onClick={() =>
+                document
+                  .getElementById(sectionId)
+                  ?.scrollIntoView({ behavior: "smooth" })
+              }
+            />
+          ))}
+        </Flex>
+        {/* 1️⃣ Hero Section ================================ */}
+        <FullSection id="first-landing">
+          <FirstPage />
+        </FullSection>
 
-      {/* 2️⃣ ESG 데이터 분석 (대시보드 형태) ============================ */}
-      <FullSection id="second-landing">
-        <SecondPage />
-      </FullSection>
+        {/* 2️⃣ ESG 데이터 분석 (대시보드 형태) ============================ */}
+        <FullSection id="second-landing">
+          <SecondPage />
+        </FullSection>
 
-      {/* 3️⃣ 점수예측 ============================ */}
-      <FullSection id="third-landing">
-        <ThirdPage />
-      </FullSection>
+        {/* 3️⃣ 점수예측 ============================ */}
+        <FullSection id="third-landing">
+          <ThirdPage />
+        </FullSection>
 
-      {/* 4️⃣ 키워드 ============================ */}
-      <FullSection id="fourth-landing">
-        <FourthPage />
-      </FullSection>
-    </Box>
+        {/* 4️⃣ 키워드 ============================ */}
+        <FullSection id="fourth-landing">
+          <FourthPage />
+        </FullSection>
+      </Box>
+    </>
   );
 }

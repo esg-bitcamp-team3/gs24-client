@@ -57,33 +57,43 @@ const Searching = () => {
   }, [isDropdownOpen]);
 
   // 가상화를 위한 row
-  const Row = ({ index, style, data }: rowProps) => {
-    const company = data[index];
-    return (
-      <Box
-        style={style}
-        key={company.corporation.id}
-        display="flex"
-        w="90%"
-        justifyContent={"space-between"}
+ const Row = ({ index, style, data }: rowProps) => {
+  const company = data[index];
+  return (
+    <Box
+      style={style}
+      key={company.corporation.id}
+      display="flex"
+      w="100%"
+      px={2}
+      justifyContent="space-between"
+      alignItems="center"
+    >
+      <Button
+        variant="ghost"
+        color="gray.700"
+        justifyContent="flex-start"
+        onClick={() => handleCompanyClick(company.corporation.id)}
+        w="100%"
+        h="40px"
+        _hover={{
+          bg: "blue.50",
+          color: "blue.600"
+        }}
+        fontSize="sm"
+        fontWeight="medium"
+        transition="all 0.2s"
       >
-        <Button
-          paddingLeft={3}
-          variant="ghost"
-          color="black"
-          justifyContent="flex-start"
-          onClick={() => handleCompanyClick(company.corporation.id)}
-          w="90%"
-        >
-          {company.corporation.corpName}
-        </Button>
-      </Box>
-    );
-  };
+        {company.corporation.corpName}
+      </Button>
+    </Box>
+  );
+};
   return (
     <Box position="relative" width="100%" ref={ref}>
       <Input
-        placeholder="search"
+        placeholder='검색'
+        pl='2'
         value={searchTerm}
         onClick={() => setIsDropdownOpen(true)}
         onChange={(e) => setSearchTerm((e.target as HTMLInputElement).value)}

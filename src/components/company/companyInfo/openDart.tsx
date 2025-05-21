@@ -1,7 +1,7 @@
 import { financeApi } from "@/lib/api/apiclient";
 import { Button, CloseButton, Dialog, Portal } from "@chakra-ui/react";
-import axios from "axios";
 import { useEffect, useState } from "react";
+import { FiExternalLink } from "react-icons/fi";
 
 interface OpenDartProps {
   corpCode: string;
@@ -28,8 +28,17 @@ const OpenDart = ({ corpCode }: OpenDartProps) => {
   return (
     <Dialog.Root size="cover" placement="center" motionPreset="slide-in-bottom">
       <Dialog.Trigger asChild>
-        <Button padding={4} variant="outline" size="sm">
-          재무제표 보기
+        <Button
+          padding={2}
+          variant="ghost"
+          w="10%"
+          aria-label="재무제표 보기"
+          background="none"
+          _hover={{ background: "none" }}
+          marginTop="-8px"
+          marginLeft="-6px"
+        >
+          <FiExternalLink />
         </Button>
       </Dialog.Trigger>
       <Portal>

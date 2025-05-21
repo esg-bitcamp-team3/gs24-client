@@ -27,6 +27,7 @@ import RealTimeChart from "./RealTimeChart";
 import { FaChartLine, FaNewspaper } from "react-icons/fa";
 import KeywordNews from "../keywordTrend/KeywordNews";
 import { InfoItemDart } from "@/components/etcs/InfoItemDart";
+import { FiExternalLink } from "react-icons/fi";
 
 const CompanyInfoCard = ({ orgId }: { orgId: string }) => {
   const [corpInfo, setCorpInfo] = useState<CorporationInfo>();

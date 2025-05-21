@@ -39,7 +39,8 @@ const LoginPage = () => {
       });
       // setTimeout(() => console.log('로그인 성공!'), 1000)
 
-      router.push("/");
+      router.push('/')
+
     } catch (error) {
       toaster.error({
         title:

@@ -1,7 +1,8 @@
 import { searchApi } from "@/lib/api/apiclient";
-import { Box, Flex, Spinner, Text } from "@chakra-ui/react";
+import { Box, Flex, Spinner, Text, IconButton } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { IoMdThumbsDown, IoMdThumbsUp } from "react-icons/io";
+import { FaSyncAlt } from "react-icons/fa";
 
 interface Props {
   orgname: string;
@@ -26,6 +27,7 @@ const EmotionCard = ({ orgname }: Props) => {
       setEmotion(
         response.data.result.positives > response.data.result.negatives
       );
+      console.log("감정 분석 결과:", response.data);
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
@@ -66,6 +68,23 @@ const EmotionCard = ({ orgname }: Props) => {
 
   return (
     <Flex p={5} borderRadius="lg" flexDir="column" width="100%">
+      <Flex justifyContent="space-between" alignItems="center">
+        <Text fontSize="md" fontWeight="bold" color="gray.700">
+          감정 분석 결과
+        </Text>
+
+        <IconButton
+          onClick={getEmotion}
+          size="sm"
+          colorScheme="indigo"
+          loading={loading}
+          variant={"ghost"}
+          aria-label="동기화"
+        >
+          <FaSyncAlt />
+        </IconButton>
+      </Flex>
+
       <Flex justifyContent="space-between" alignItems="center" mt={6}>
         {emotion ? (
           <>

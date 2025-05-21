@@ -119,7 +119,7 @@ export default function KeywordNews({
   }
 
   return (
-    <Box maxH="400px" overflowY="auto">
+    <Box maxH="400px" overflowY="auto" mt={4}>
       <VStack align="stretch" gap={3} pb={6}>
         {news.map((item, idx) => (
           <Link

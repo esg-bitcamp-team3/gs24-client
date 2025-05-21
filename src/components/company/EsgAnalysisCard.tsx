@@ -8,69 +8,41 @@ import {
   Text,
   VStack,
   Button,
+  Icon,
 } from "@chakra-ui/react";
 
 import React, { useEffect, useState } from "react";
 
 import { EsgLineData } from "@/components/chartDataImport";
 import { EsgBarData } from "../barChart";
-import { CompanyInfo } from "@/lib/api/interfaces/companyinfo";
-import { getCompanyInfo, getInterestOrganization } from "@/lib/api/get";
-import { OrganizationInfo } from "@/lib/api/interfaces/interestOrganization";
+import { FaClipboardList } from "react-icons/fa";
 
 const EsgAnalysisCard = ({ orgId }: { orgId: string }) => {
-  const [companyinfo, setCompanyInfo] = useState<CompanyInfo | null>(null);
-  const [showMore, setShowMore] = useState(false);
-  const [ioCheck, setIoCheck] = useState<Boolean>(false);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const ciData = await getCompanyInfo(orgId);
-        if (ciData) setCompanyInfo(ciData || null);
-        else return null;
-
-        const checkId = await getInterestOrganization();
-
-        if (
-          checkId?.organizationList.find((org: OrganizationInfo) => {
-            return org.organization.id === orgId;
-          })
-        ) {
-          setIoCheck(true);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    fetchData();
-  }, []);
-
-  const [keywordNews, setKeywordNews] = useState<
-    { title: string; link: string }[]
-  >([]);
-  const [selectedKeyword, setSelectedKeyword] = useState<string | null>(null);
-
-  const handleNewsUpdate = (
-    newsList: { title: string; link: string }[],
-    keyword: string
-  ) => {
-    console.log("🔥 부모가 받은 뉴스:", newsList, keyword);
-    setKeywordNews(newsList);
-    setSelectedKeyword(keyword);
-  };
-
   // 스타일 상수
   const CARD_STYLES = {
     bg: "white",
     borderRadius: "xl",
     boxShadow: "0 4px 20px rgba(0, 0, 0, 0.08)",
-    transition: "all 0.2s",
-    // _hover: {
-    //   transform: 'translateY(-2px)',
-    //   boxShadow: '0 6px 25px rgba(0, 0, 0, 0.12)'
-    // },
-    overflow: "auto",
+    transition: "all 0.3s ease",
+    _hover: {
+      transform: "translateY(-2px)",
+      boxShadow: "0 6px 25px rgba(0, 0, 0, 0.12)",
+    },
+    overflow: "hidden",
+    border: "1px solid",
+    borderColor: "gray.100",
+  };
+
+  const BOX_STYLES = {
+    bg: "white",
+    borderRadius: "xl",
+    boxShadow: "0 4px 20px rgba(0, 0, 0, 0.08)",
+  };
+
+  const ESG_COLORS = {
+    E: "green.500",
+    S: "purple.500",
+    G: "orange.500",
   };
 
   const HEADING_STYLES = {
@@ -88,31 +60,185 @@ const EsgAnalysisCard = ({ orgId }: { orgId: string }) => {
     >
       {/* ESG별 점수 막대 그래프 ================================================================== */}
       <Box {...CARD_STYLES} p={6} w={{ base: "100%", md: "100%" }}>
-        <Text fontSize="lg" fontWeight="bold">
-          ESG별 점수
+        <Text {...HEADING_STYLES} textAlign="center">
+          ESG 점수
         </Text>
-        <Separator mt={2} mb={4} />
-        <Flex display="flex" columns={3}>
-          {orgId && <EsgBarData organizationId={orgId} targetKey="E" />}
-          {orgId && <EsgBarData organizationId={orgId} targetKey="S" />}
-          {orgId && <EsgBarData organizationId={orgId} targetKey="G" />}
-        </Flex>
+        <Box
+          {...BOX_STYLES}
+          w={{ base: "100%", md: "100%" }}
+          mt={6}
+          p={4}
+          gap={4}
+        >
+          <Flex display="flex" justify="space-between" w={"100%"} gap={4}>
+            <Flex direction="column" flex={1} align="center">
+              <Text
+                mb={2}
+                color={ESG_COLORS.E}
+                fontWeight="600"
+                fontSize="md"
+                display="flex"
+                alignItems="center"
+                gap={1}
+              >
+                <Box
+                  as="span"
+                  w="10px"
+                  h="10px"
+                  borderRadius="full"
+                  bg={ESG_COLORS.E}
+                  mr={1}
+                />
+                환경 (E)
+              </Text>
+              {orgId && <EsgBarData organizationId={orgId} targetKey="E" />}
+            </Flex>
+            <Flex direction="column" flex={1} align="center">
+              <Text
+                mb={2}
+                color={ESG_COLORS.S}
+                fontWeight="600"
+                fontSize="md"
+                display="flex"
+                alignItems="center"
+                gap={1}
+              >
+                <Box
+                  as="span"
+                  w="10px"
+                  h="10px"
+                  borderRadius="full"
+                  bg={ESG_COLORS.S}
+                  mr={1}
+                />
+                사회 (S)
+              </Text>
+              {orgId && <EsgBarData organizationId={orgId} targetKey="S" />}
+            </Flex>
+            <Flex direction="column" flex={1} align="center">
+              <Text
+                mb={2}
+                color={ESG_COLORS.G}
+                fontWeight="600"
+                fontSize="md"
+                display="flex"
+                alignItems="center"
+                gap={1}
+              >
+                <Box
+                  as="span"
+                  w="10px"
+                  h="10px"
+                  borderRadius="full"
+                  bg={ESG_COLORS.G}
+                  mr={1}
+                />
+                지배구조 (G)
+              </Text>
+              {orgId && <EsgBarData organizationId={orgId} targetKey="G" />}
+            </Flex>
+          </Flex>
+        </Box>
       </Box>
       <Flex direction={{ base: "column", md: "row" }} gap={8}>
         {/* ESG 등급 변화 추이 선 그래프 ================================================================== */}
         <Box {...CARD_STYLES} p={6} w={{ base: "100%", md: "70%" }}>
-          <Text {...HEADING_STYLES}>ESG 등급 변화추이</Text>
-          <Separator mt={2} mb={4} />
-          <Box mt={4} width={"full"}>
+          <Text {...HEADING_STYLES} textAlign="center">
+            ESG 등급 변화 추이
+          </Text>
+          <Box mt={8} width={"full"}>
             {orgId && <EsgLineData organizationId={orgId} />}
           </Box>
         </Box>
 
         {/* ESG 예상 등급 ================================================================== */}
         <Box {...CARD_STYLES} p={6} w={{ base: "100%", md: "30%" }}>
-          <Text {...HEADING_STYLES}>ESG 예상 등급</Text>
-          <Separator mt={2} mb={4} />
-          <Box>ESG 예상 등급 위치</Box>
+          <Text {...HEADING_STYLES} textAlign={"center"}>
+            ESG 예상 등급
+          </Text>
+          <Flex
+            direction="column"
+            align="center"
+            justify="center"
+            h="200px"
+            mt={16}
+          >
+            <Box position="relative">
+              {/* Outer ring with gradient */}
+              <Box
+                w="140px"
+                h="140px"
+                borderRadius="full"
+                background="linear-gradient(135deg, #4299E1 0%, #3182CE 100%)"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                boxShadow="0 4px 20px rgba(66, 153, 225, 0.3)"
+              >
+                {/* Inner circle with grade */}
+                <Box
+                  w="120px"
+                  h="120px"
+                  borderRadius="full"
+                  bg="white"
+                  display="flex"
+                  flexDirection="column"
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  <Text
+                    fontSize="4xl"
+                    fontWeight="bold"
+                    color="blue.500"
+                    letterSpacing="-1px"
+                  >
+                    A+
+                  </Text>
+                </Box>
+              </Box>
+            </Box>
+
+            <Box mt={6} textAlign="center">
+              <Text color="gray.600" fontSize="sm">
+                예상 등급 (2025년 5월)
+              </Text>
+            </Box>
+
+            {/* Mini legend */}
+            <Box mt={4} p={2} bg="gray.50" borderRadius="md" w="90%">
+              <Flex
+                justifyContent="space-between"
+                fontSize="xs"
+                color="gray.500"
+              >
+                <Text>D</Text>
+                <Text>C</Text>
+                <Text>B</Text>
+                <Text>B+</Text>
+                <Text>A</Text>
+                <Text fontWeight="bold" color="blue.500">
+                  A+
+                </Text>
+              </Flex>
+              <Box
+                w="100%"
+                h="4px"
+                bg="gray.200"
+                borderRadius="full"
+                mt={1}
+                position="relative"
+              >
+                <Box
+                  position="absolute"
+                  right="0"
+                  w="16.6%"
+                  h="100%"
+                  bg="blue.500"
+                  borderRadius="full"
+                />
+              </Box>
+            </Box>
+          </Flex>
         </Box>
       </Flex>
     </Flex>

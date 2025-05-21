@@ -75,7 +75,7 @@ const Navbar: React.FC = () => {
         >
           <Avatar.Root shape="full" size="lg">
             <Avatar.Fallback name="Segun Adebayo" />
-            <Avatar.Image src="@public/user.png" />
+            {/* <Avatar.Image src="@public/user.png" /> */}
           </Avatar.Root>
         </div>
         {/* 나가기 버튼================================================================== */}

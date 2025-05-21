@@ -26,7 +26,6 @@ import RealTimeChart from "./RealTimeChart";
 
 import { FaBuilding, FaChartLine, FaNewspaper } from "react-icons/fa";
 
-
 const CompanyInfoCard = ({ orgId }: { orgId: string }) => {
   const [corpInfo, setCorpInfo] = useState<CorporationInfo>();
   const [loading, setLoading] = useState<boolean>(true);
@@ -75,7 +74,6 @@ const CompanyInfoCard = ({ orgId }: { orgId: string }) => {
 
   return (
     <Flex direction={{ base: "column", md: "column" }} gap={8}>
-
       {/* Company Information Card */}
       <Box {...CARD_STYLES} p={0} w={{ base: "100%", md: "100%" }}>
         <Box p={6}>
@@ -146,12 +144,6 @@ const CompanyInfoCard = ({ orgId }: { orgId: string }) => {
       <Flex direction={{ base: "column", md: "row" }} gap={8}>
         {/* 주가 차트 */}
 
-        <Box {...CARD_STYLES} p={6} w={{ base: "100%", md: "50%" }}>
-          <Text {...HEADING_STYLES}>주가 차트</Text>
-          <Separator mt={2} mb={4} />
-          <Box>
-            <RealTimeChart corpStockCode={corpInfo?.stock_code || ""} />
-
         <Box {...CARD_STYLES} w={{ base: "100%", md: "50%" }}>
           <Box bg="teal.50" p={4} borderBottom="1px" borderColor="teal.100">
             <Text {...HEADING_STYLES}>
@@ -159,24 +151,8 @@ const CompanyInfoCard = ({ orgId }: { orgId: string }) => {
               주가 차트
             </Text>
           </Box>
-          <Box
-            p={6}
-            minH="300px"
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-          >
-            {loading ? (
-              <Flex direction="column" w="100%" gap={4}>
-                <Skeleton height="200px" w="100%" />
-                <Skeleton height="20px" w="80%" />
-              </Flex>
-            ) : (
-              <Text color="gray.500" fontSize="md">
-                주가 차트 데이터가 준비 중입니다
-              </Text>
-            )}
-
+          <Box p={6} minH="400px" alignItems="center" justifyContent="center">
+            <RealTimeChart corpStockCode={corpInfo?.stock_code || ""} />
           </Box>
         </Box>
 

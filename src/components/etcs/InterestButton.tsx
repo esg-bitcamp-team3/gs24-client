@@ -16,7 +16,7 @@ import React, { useEffect, useState } from "react";
 import { InterestButtonProps } from "@/lib/api/interfaces/interestOrganization";
 import { FcLikePlaceholder } from "react-icons/fc";
 import { FcLike } from "react-icons/fc";
-import { getInterestCorporation, getMyCategory } from "@/lib/api/get";
+import { getInterestCorporation } from "@/lib/api/get";
 import { deleteCategory, deleteInterestCorporation } from "@/lib/api/delete";
 import {
   postCoporationCategries,

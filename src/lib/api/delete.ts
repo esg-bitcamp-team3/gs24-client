@@ -12,9 +12,9 @@ export const deleteInterestCorporation = async (id: string) => {
 
 export const deleteCategory = async (id: string) => {
   try {
-    const res = await apiClient.delete(`/categories/${id}`);
+    const res = await apiClient.delete<string>(`/categories/${id}`);
     return res.data;
   } catch (err) {
-    handleApiError(err, "관심기업 삭제에 실패했습니다.");
+    handleApiError(err, "카테고리 삭제에 실패했습니다.");
   }
 };

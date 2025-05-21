@@ -49,7 +49,7 @@ const Navbar: React.FC = () => {
       <Box display="flex" paddingX="4" alignItems="center" width="10%">
         <Image
           src="/logo.png"
-          onClick={() => router.push("/dashboard")}
+          onClick={() => router.push("/")}
           cursor="pointer"
         />
       </Box>

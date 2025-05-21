@@ -25,8 +25,11 @@ import {
 import { LuUser } from "react-icons/lu";
 import { TbLockPassword } from "react-icons/tb";
 import { useEffect, useRef, useState } from "react";
+import useLoginCheck from "@/components/etcs/loginCheck";
 
 export default function userInfoPage({ id }: { id: string }) {
+  useLoginCheck(); // 로그인 체크
+
   // 상태 정의(useState), 사용자 전체 정보는 user에 저장
   const [user, setUser] = useState<User | null>(null);
   const [name, setName] = useState("");

@@ -29,3 +29,32 @@ export interface CorpWithInterest {
   corporation: Corporation;
   interested: boolean;
 }
+
+export interface CorporationsWithInterestPage {
+  corpWithInterestDTOList: CorpWithInterest[];
+  hasMore: boolean;
+}
+
+export interface InterestCorporation {
+  id: string;
+  userId: string;
+  corporationId: string;
+  checkTime: string;
+}
+
+export interface InterestCorporationDetail {
+  id: string;
+  userId: string;
+  corporation: Corporation;
+}
+
+export interface Category {
+  id: string;
+  name: string;
+}
+
+export interface CategoryCorporation {
+  id: string;
+  interestCorporationDetailDTO: InterestCorporationDetail;
+  categoryDTO: Category;
+}

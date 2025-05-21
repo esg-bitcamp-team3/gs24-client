@@ -4,7 +4,10 @@ import { Box, Button, Input, Text } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import InterestButton from "../etcs/InterestButton";
-import { CorpWithInterest } from "@/lib/api/interfaces/corporation";
+import {
+  Corporation,
+  CorpWithInterest,
+} from "@/lib/api/interfaces/corporation";
 import { FixedSizeList as List } from "react-window";
 import { checkLogin } from "@/lib/api/auth";
 import { useClickAway } from "react-use";
@@ -18,7 +21,7 @@ interface rowProps {
 const Searching = () => {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
-  const [companyList, setCompanyList] = useState<CorpWithInterest[]>([]);
+  const [companyList, setCompanyList] = useState<Corporation[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const ref = useRef(null);
   useClickAway(ref, () => setIsDropdownOpen(false));
@@ -32,7 +35,7 @@ const Searching = () => {
     searchTerm === ""
       ? companyList
       : companyList.filter((company) =>
-          company.corporation.corpName
+          company.corpName
             .trim()
             .toLowerCase()
             .includes(searchTerm.trim().toLowerCase())
@@ -42,8 +45,8 @@ const Searching = () => {
     try {
       const chkLogin = await checkLogin();
       if (chkLogin) {
-        const data = await getCorporationsWithInterest(); // 서버에서 page별 로딩
-        setCompanyList(data);
+        const data = await getCorporationList(); // 서버에서 page별 로딩
+        setCompanyList(data ?? []);
       } else {
         const data2 = await getCorporationList();
         const withInterestFalse: CorpWithInterest[] = (data2 ?? []).map(
@@ -52,7 +55,7 @@ const Searching = () => {
             interested: false,
           })
         );
-        setCompanyList(withInterestFalse);
+        setCompanyList(withInterestFalse.map((item) => item.corporation));
       }
     } catch (error) {
       console.error("Error fetching companies:", error);
@@ -122,7 +125,6 @@ const Searching = () => {
               itemCount={filteredCompanies.length}
               itemSize={50}
               width="100%"
-              itemData={filteredCompanies}
             >
               {Row}
             </List>

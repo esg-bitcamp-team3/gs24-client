@@ -137,7 +137,6 @@ const KeywordTrendCard = ({ orgId }: { orgId: string }) => {
               </Text>
             )}
           </Text>
-          <Separator mb={4} />
           <KeywordNews
             query={corporation?.corp_name || ""}
             keyword={selectedKeyword}

@@ -40,7 +40,7 @@ export const marketApi = axios.create({
 export const searchApi = axios.create({
   baseURL: "http://localhost/search/search",
   // withCredentials: true,
-  timeout: 5000,
+  timeout: 100000,
   headers: {
     "Content-Type": "application/json",
   },

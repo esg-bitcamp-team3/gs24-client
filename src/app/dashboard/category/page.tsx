@@ -5,31 +5,23 @@ import {
   Button,
   CloseButton,
   DataList,
-  Heading,
   HStack,
-  Slider,
   Tabs,
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { useCallback, useEffect, useState } from "react";
-import { LuPlus, LuSearch } from "react-icons/lu";
+import { useEffect, useState } from "react";
+
 import AddCategory from "./addCategory";
-import SearchOrg from "@/components/navbar/SearchOrg";
-import AddOrg from "./addOrg";
 import {
   Category,
   CategoryCorporation,
-  CorpWithInterest,
 } from "@/lib/api/interfaces/corporation";
-import {
-  getCategory,
-  getCategoryCorporation,
-  getCorporationsWithInterest,
-} from "@/lib/api/get";
+import { getCategory, getCategoryCorporation } from "@/lib/api/get";
 import { deleteCategory } from "@/lib/api/delete";
 import { postCategory } from "@/lib/api/post";
 import { useRouter } from "next/navigation";
+import AddCorp from "./addCorp";
 
 const TABS_PER_PAGE = 5;
 
@@ -234,7 +226,7 @@ export default function Page() {
                   )}
                 </Box>
                 <VStack gap={2} w="100%">
-                  <AddOrg
+                  <AddCorp
                     label="기업 추가하기"
                     id={item.id}
                     onSaved={() => {

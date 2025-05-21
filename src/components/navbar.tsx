@@ -17,6 +17,8 @@ import { logout } from "@/lib/api/auth";
 import Searching from "./navbar/searching";
 import { FaSearch } from "react-icons/fa";
 import { ExchangeRateChart } from "./dashboard";
+import { FaBookOpen } from "react-icons/fa6";
+import { FaHeart } from "react-icons/fa";
 
 // 백엔드에서 받아온 회사 리스트의 타입을 정의
 
@@ -60,12 +62,35 @@ const Navbar: React.FC = () => {
 
       <Box display="flex" alignItems="center" gap="4">
         <Button
-          onClick={() => router.push("/dashboard/vocabulary")}
-          color="black"
-          bg="white"
-          border="1px solid #000000"
-          padding={"0.5rem"}
+          onClick={() => router.push("/dashboard/category")}
+          colorScheme="teal"
+          variant="ghost"
+          borderRadius="lg"
+          minW="44px"
+          h="44px"
+          fontWeight="semibold"
+          fontSize="md"
+          _hover={{ bg: "teal.50" }}
+          transition="all 0.2s"
+          px={3}
         >
+          <FaHeart color="red" />
+          관심기업
+        </Button>
+        <Button
+          onClick={() => router.push("/dashboard/vocabulary")}
+          colorScheme="teal"
+          variant="ghost"
+          borderRadius="lg"
+          minW="44px"
+          h="44px"
+          fontWeight="semibold"
+          fontSize="md"
+          _hover={{ bg: "teal.50" }}
+          transition="all 0.2s"
+          px={3}
+        >
+          <FaBookOpen />
           용어사전
         </Button>
         {/* 아바타================================================================== */}

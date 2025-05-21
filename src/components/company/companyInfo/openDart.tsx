@@ -15,7 +15,7 @@ const OpenDart = ({ corpCode }: OpenDartProps) => {
       const response = await financeApi.get(
         `single-financial?corp_code=${corpCode}&year=${year}&report_code=11011&fs_div=OFS`
       );
-
+      console.log("response", response.data);
       setRceptNo(response.data.list[0].rcept_no);
     } catch (error) {
       console.error("Error fetching data:", error);

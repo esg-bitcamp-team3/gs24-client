@@ -73,7 +73,7 @@ const Ticker = () => {
         const dd = String(today.getDate()).padStart(2, "0");
         const dateStr = `${yyyy}${mm}${dd}`;
 
-        const res = await marketApi.get(`/exchange_rate?date=${dateStr}`);
+        const res = await marketApi.get(`/exchange-rate?date=${dateStr}`);
 
         const data = res.data; // [{ date: '2025-05-20', data: [ {...USD...} ] }, ...]
         if (Array.isArray(data) && data.length >= 2) {
@@ -107,9 +107,7 @@ const Ticker = () => {
       const basDt = getPreviousBusinessDay(); // 💡 요일 고려된 날짜 계산
 
       try {
-        const res = await marketApi.get(
-          `/carbon_price?basDt=${basDt}&itmsNm=KAU24`
-        );
+        const res = await marketApi.get(`/carbon-price`);
 
         const item = res.data[0];
         if (item) {

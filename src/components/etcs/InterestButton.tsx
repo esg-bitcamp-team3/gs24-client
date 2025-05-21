@@ -1,13 +1,15 @@
 "use client";
 
+import { useForm, Controller, DefaultValues } from "react-hook-form";
 import {
   Box,
   Button,
-  Checkbox,
   Dialog,
-  Flex,
   Portal,
   Text,
+  Checkbox,
+  Fieldset,
+  CheckboxGroup,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 
@@ -22,13 +24,19 @@ import {
 } from "@/lib/api/post";
 import { checkLogin } from "@/lib/api/auth";
 import CategoryDialog from "./categoryDialog";
-import { Category, InterestCategories } from "@/lib/api/interfaces/category";
+import { Category } from "@/lib/api/interfaces/category";
+
+const defaultValues = {
+  category: [], // id 배열
+};
+interface FormValues {
+  category: string[]; // id 배열
+}
 
 const InterestButton = ({ orgId }: InterestButtonProps) => {
   const [isInterested, setIsInterested] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [categoryList, setCategoryList] = useState<Category[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string[]>([]);
   const [checked, setChecked] = useState(false);
 
   const handleClick = async () => {
@@ -36,7 +44,10 @@ const InterestButton = ({ orgId }: InterestButtonProps) => {
       const chkLogin = await checkLogin();
       if (chkLogin) {
         if (isInterested) {
-          await deleteInterestCorporation(orgId);
+          await postCoporationCategries({
+            corporationId: orgId,
+            idList: [], // form으로부터 직접 받음
+          });
           console.log("관심기업 삭제 성공");
           setIsInterested(false);
         } else {
@@ -60,23 +71,7 @@ const InterestButton = ({ orgId }: InterestButtonProps) => {
       console.error("관심기업 삭제 실패:", error);
     }
   };
-  const handleCheckboxChange = (checked: boolean, id: string) => {
-    setSelectedCategory((prev) =>
-      checked ? [...prev, id] : prev.filter((item) => item !== id)
-    );
-  };
-  const addCategory = async (orgId: string, selectedCategory: string[]) => {
-    try {
-      await postCoporationCategries({
-        corporationId: orgId,
-        idList: selectedCategory,
-      });
-      console.log("잘 들어감");
-      setIsInterested(true);
-    } catch (error) {
-      console.error("실패", error);
-    }
-  };
+
   useEffect(() => {
     const checkInterest = async () => {
       try {
@@ -93,8 +88,27 @@ const InterestButton = ({ orgId }: InterestButtonProps) => {
       }
     };
     checkInterest();
-  }, [categoryList]);
+  }, [categoryList, isInterested]);
 
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValues>({ defaultValues });
+
+  const onSubmit = async (data: FormValues) => {
+    try {
+      await postCoporationCategries({
+        corporationId: orgId,
+        idList: data.category ?? [], // form으로부터 직접 받음
+      });
+      console.log("등록 성공");
+      setIsInterested(true);
+      setIsOpen(false);
+    } catch (error) {
+      console.error("등록 실패:", error);
+    }
+  };
   return (
     <>
       <Button
@@ -112,78 +126,144 @@ const InterestButton = ({ orgId }: InterestButtonProps) => {
       </Button>
 
       <Dialog.Root
-        scrollBehavior={"inside"}
+        scrollBehavior="inside"
         placement="center"
         open={isOpen}
         onOpenChange={(details) => setIsOpen(details.open)}
       >
         <Portal>
-          <Dialog.Backdrop />
+          <Dialog.Backdrop
+            style={{
+              backgroundColor: "rgba(0,0,0,0.3)",
+              backdropFilter: "blur(2px)",
+            }}
+          />
           <Dialog.Positioner>
-            <Dialog.Content padding={4}>
+            <Dialog.Content
+              style={{
+                backgroundColor: "#fff",
+                borderRadius: "12px",
+                boxShadow: "0 10px 30px rgba(0, 0, 0, 0.2)",
+                padding: "24px",
+                width: "100%",
+                maxWidth: "500px",
+              }}
+            >
               <Dialog.Header>
-                <Dialog.Title>관심 기업 등록</Dialog.Title>
-              </Dialog.Header>
-              <Dialog.Body>
-                <Box
-                  height={300}
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  flexDirection="column"
-                >
-                  <CategoryDialog />
-                  {categoryList.length > 0 ? (
-                    categoryList.map((category) => (
-                      <>
-                        <Flex key={category.id}>
-                          <Checkbox.Root
-                            checked={selectedCategory.includes(category.id)}
-                            onCheckedChange={(checked) =>
-                              handleCheckboxChange(!!checked, category.id)
-                            }
-                          >
-                            <Checkbox.HiddenInput />
-                            <Checkbox.Control />
-                            <Checkbox.Label>{category.name}</Checkbox.Label>
-                          </Checkbox.Root>
-                          <Button
-                            variant="ghost"
-                            color="black"
-                            justifyContent="flex-end"
-                            onClick={() => deleteClick(category.id)}
-                          >
-                            X
-                          </Button>
-                        </Flex>
-                      </>
-                    ))
-                  ) : (
-                    <>
-                      <Text textAlign="center">관심 등록 기업이 없습니다.</Text>
-                      <Text textAlign="center">
-                        관심 등록 기업을 등록하시겠습니까?
-                      </Text>
-                    </>
-                  )}
-                </Box>
-              </Dialog.Body>
-              <Dialog.Footer>
-                <Button
-                  variant="solid"
-                  colorScheme="blue"
-                  onClick={async () => {
-                    // await handleClick();
-                    setIsOpen(false);
-                    await addCategory(orgId, selectedCategory);
+                <Dialog.Title
+                  style={{
+                    fontSize: "20px",
+                    fontWeight: "bold",
+                    color: "#333",
                   }}
                 >
-                  등록
-                </Button>
-                <Button variant="ghost" ml={3} onClick={() => setIsOpen(false)}>
-                  취소
-                </Button>
-              </Dialog.Footer>
+                  관심 기업 등록
+                </Dialog.Title>
+              </Dialog.Header>
+
+              <Dialog.Body>
+                <Box
+                  style={{
+                    minHeight: "300px",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: "16px",
+                    marginTop: "16px",
+                  }}
+                >
+                  <CategoryDialog />
+
+                  <form onSubmit={handleSubmit(onSubmit)}>
+                    <Fieldset.Root invalid={!!errors.category}>
+                      <Controller
+                        name="category"
+                        control={control}
+                        rules={{ required: "카테고리를 하나 이상 선택하세요." }}
+                        render={({ field }) => (
+                          <CheckboxGroup
+                            name={field.name}
+                            value={field.value}
+                            onValueChange={field.onChange}
+                          >
+                            <Fieldset.Content>
+                              {categoryList.map((category) => (
+                                <Checkbox.Root
+                                  key={category.id}
+                                  value={category.id}
+                                >
+                                  <Box
+                                    style={{
+                                      display: "flex",
+                                      justifyContent: "space-between",
+                                      alignItems: "center",
+                                      backgroundColor: "#f5f5f5",
+                                      borderRadius: "8px",
+                                    }}
+                                  >
+                                    <Box
+                                      style={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: "8px",
+                                      }}
+                                    >
+                                      <Checkbox.HiddenInput />
+                                      <Checkbox.Control />
+                                      <Checkbox.Label>
+                                        {category.name}
+                                      </Checkbox.Label>
+                                    </Box>
+                                    <Button
+                                      type="button"
+                                      onClick={() => {
+                                        const updated = field.value.filter(
+                                          (v) => v !== category.id
+                                        );
+                                        field.onChange(updated);
+                                        deleteClick(category.id);
+                                      }}
+                                      style={{
+                                        background: "transparent",
+                                        border: "none",
+                                        color: "#e74c3c",
+                                        fontWeight: "bold",
+                                        fontSize: "16px",
+                                        cursor: "pointer",
+                                      }}
+                                    >
+                                      ✕
+                                    </Button>
+                                  </Box>
+                                </Checkbox.Root>
+                              ))}
+                            </Fieldset.Content>
+                          </CheckboxGroup>
+                        )}
+                      />
+                      {errors.category && (
+                        <Fieldset.ErrorText>
+                          {errors.category.message}
+                        </Fieldset.ErrorText>
+                      )}
+                    </Fieldset.Root>
+
+                    <Dialog.Footer
+                      style={{
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        gap: "10px",
+                        marginTop: "24px",
+                      }}
+                    >
+                      <Button type="submit">등록</Button>
+                      <Button type="button" onClick={() => setIsOpen(false)}>
+                        취소
+                      </Button>
+                    </Dialog.Footer>
+                  </form>
+                </Box>
+              </Dialog.Body>
             </Dialog.Content>
           </Dialog.Positioner>
         </Portal>

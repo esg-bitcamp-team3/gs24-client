@@ -27,7 +27,7 @@ const CategoryDialog = () => {
             <Dialog.Header>
               <Dialog.Title>그룹 추가하기</Dialog.Title>
             </Dialog.Header>
-            <Dialog.Body>
+            <Dialog.Body padding={4}>
               <Box>
                 <Input
                   placeholder="그룹 이름을 입력하세요"
@@ -35,24 +35,43 @@ const CategoryDialog = () => {
                 />
               </Box>
             </Dialog.Body>
-            <Dialog.Footer>
+            <Dialog.Footer
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                gap: "10px",
+                marginTop: "24px",
+              }}
+            >
               <Button
-                variant="solid"
-                colorScheme="blue"
                 onClick={() => {
                   addCategory();
                   setIsOpen(false);
+                }}
+                style={{
+                  padding: "10px 16px",
+                  backgroundColor: "#007bff",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: "6px",
+                  cursor: "pointer",
+                  fontWeight: "bold",
                 }}
               >
                 등록
               </Button>
               <Button
-                variant="outline"
-                marginTop={3}
-                padding={3}
                 onClick={() => setIsOpen(false)}
+                style={{
+                  padding: "10px 16px",
+                  backgroundColor: "#f0f0f0",
+                  color: "#555",
+                  border: "none",
+                  borderRadius: "6px",
+                  cursor: "pointer",
+                }}
               >
-                Close
+                취소
               </Button>
             </Dialog.Footer>
           </Dialog.Content>

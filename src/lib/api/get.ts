@@ -113,6 +113,14 @@ export async function getEsgTerms() {
 }
 
 // ================================== corporation
+export async function getCorporationList() {
+  try {
+    const response = await apiClient.get<Corporation[]>("/corporations");
+    return response.data;
+  } catch (error) {
+    handleApiError(error, "기업 정보를 가져오는 데 실패했습니다.");
+  }
+}
 
 export async function getCorporationInfo(id: string) {
   try {
@@ -123,11 +131,10 @@ export async function getCorporationInfo(id: string) {
   }
 }
 
-export const getCorporationsWithInterest = async (page: number) => {
+export const getCorporationsWithInterest = async () => {
   try {
     const res = await apiClient.get<CorporationsWithInterestPage>(
-      "/interest-corporations/corporations",
-      { params: { page } }
+      "/interest-corporations/corporations"
     );
     return res.data;
   } catch (err) {

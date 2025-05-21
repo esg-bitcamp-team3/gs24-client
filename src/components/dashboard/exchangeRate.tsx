@@ -1,83 +1,224 @@
-import {Box, Spinner, Text} from '@chakra-ui/react'
+import { Box, HStack, Text } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { marketApi } from "@/lib/api/apiclient";
 
-import axios from 'axios'
-import React, {useState, useEffect, use} from 'react'
-
-import {Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts'
+const MotionBox = motion(Box);
 
 interface ExchangeRateItem {
-  date: string
-  rate: number
+  date: string;
+  rate: number;
 }
 
-const useExchangeRateHistory = () => {
-  const [data, setData] = useState<ExchangeRateItem[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<null | string>(null)
+interface CarbonItem {
+  id: number;
+  date: string;
+  item_name: string;
+  price: string;
+  compare: string;
+  percent: string;
+  volume: string;
+  total_value: string;
+}
 
+const Ticker = () => {
+  const [showCarbon, setShowCarbon] = useState(false);
+  const [exchangeToday, setExchangeToday] = useState<ExchangeRateItem | null>(
+    null
+  );
+  const [exchangePrev, setExchangePrev] = useState<ExchangeRateItem | null>(
+    null
+  );
+  const [carbonToday, setCarbonToday] = useState<CarbonItem | null>(null);
+
+  // 롤링
   useEffect(() => {
-    const fetch = async () => {
-      try {
-        const res = await axios.get(
-          `http://localhost:8000/api/market-price/exchange-rate`
-        )
-        const rawData = res.data
+    const interval = setInterval(() => {
+      setShowCarbon((prev) => !prev);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
 
-        const parsed = rawData
-          .map((entry: any) => {
-            const usd = entry.data.find((d: any) => d.cur_unit === 'USD')
-            if (!usd || !usd.deal_bas_r) return null
+  // ✅ 실제 탄소 데이터 가져오기
+  const getPreviousBusinessDay = (): string => {
+    const date = new Date();
+    const day = date.getDay();
 
-            return {
-              date: entry.date,
-              rate: parseFloat(usd.deal_bas_r.replace(',', ''))
-            }
-          })
-          .filter(Boolean) // null 제거
-
-        setData(parsed.reverse()) // 최신 → 오래된 순서로 정렬
-      } catch (err: any) {
-        console.error('환율 불러오기 실패:', err)
-        setError('환율 데이터를 불러오는 중 오류가 발생했습니다.')
-      } finally {
-        setLoading(false)
-      }
+    if (day === 1) {
+      // 월요일이면 금요일 (3일 전)
+      date.setDate(date.getDate() - 3);
+    } else if (day === 0) {
+      // 일요일이면 금요일 (2일 전)
+      date.setDate(date.getDate() - 2);
+    } else if (day === 6) {
+      // 토요일이면 금요일 (1일 전)
+      date.setDate(date.getDate() - 1);
+    } else {
+      // 화~금은 전날
+      date.setDate(date.getDate() - 1);
     }
 
-    fetch()
-  }, [])
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, "0");
+    const dd = String(date.getDate()).padStart(2, "0");
+    return `${yyyy}${mm}${dd}`;
+  };
+  // ✅ 환율 실제 데이터 호출로 교체
+  useEffect(() => {
+    const fetchExchangeData = async () => {
+      try {
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, "0");
+        const dd = String(today.getDate()).padStart(2, "0");
+        const dateStr = `${yyyy}${mm}${dd}`;
 
-  return {data, loading, error}
-}
+        const res = await marketApi.get(`/exchange-rate?date=${dateStr}`);
 
-// ==============================
-// 환율 박스 컴포넌트
-// ==============================
-const ExchangeRateChart = () => {
-  const {data, loading, error} = useExchangeRateHistory()
+        const data = res.data; // [{ date: '2025-05-20', data: [ {...USD...} ] }, ...]
+        if (Array.isArray(data) && data.length >= 2) {
+          const extractUSD = (entry: any) =>
+            entry.data.find((d: any) => d.cur_unit === "USD" && d.deal_bas_r);
+
+          const usdToday = extractUSD(data[0]);
+          const usdPrev = extractUSD(data[1]);
+
+          if (usdToday && usdPrev) {
+            setExchangeToday({
+              date: data[0].date,
+              rate: parseFloat(usdToday.deal_bas_r.replace(",", "")),
+            });
+            setExchangePrev({
+              date: data[1].date,
+              rate: parseFloat(usdPrev.deal_bas_r.replace(",", "")),
+            });
+          }
+        }
+      } catch (err) {
+        console.error("환율 데이터 요청 실패:", err);
+      }
+    };
+
+    fetchExchangeData();
+  }, []);
+
+  useEffect(() => {
+    const fetchCarbonData = async () => {
+      const basDt = getPreviousBusinessDay(); // 💡 요일 고려된 날짜 계산
+
+      try {
+        const res = await marketApi.get(
+          `/carbon-price?basDt=${basDt}&itmsNm=KAU24`
+        );
+
+        const item = res.data[0];
+        if (item) {
+          const formatted: CarbonItem = {
+            id: 1,
+            date: `${item.basDt.slice(0, 4)}/${item.basDt.slice(
+              4,
+              6
+            )}/${item.basDt.slice(6, 8)}`,
+            item_name: item.itmsNm,
+            price: item.clpr,
+            compare: item.vs,
+            percent: item.fltRt,
+            volume: item.trqu,
+            total_value: item.trPrc,
+          };
+          setCarbonToday(formatted);
+        }
+      } catch (err) {
+        console.error("탄소 데이터 요청 실패:", err);
+      }
+    };
+
+    fetchCarbonData();
+  }, []);
+  const getExchangeDiff = (curr: number, prev: number) => {
+    const diff = curr - prev;
+    const percent = ((diff / prev) * 100).toFixed(2);
+    return { diff: diff.toFixed(2), percent };
+  };
+
+  const renderExchange = () => {
+    if (!exchangeToday || !exchangePrev) return <Text>환율 데이터 없음</Text>;
+    const { diff, percent } = getExchangeDiff(
+      exchangeToday.rate,
+      exchangePrev.rate
+    );
+    const isUp = parseFloat(diff) > 0;
+
+    return (
+      <HStack justify="space-between" align="center" px={10}>
+        <HStack gap={4} align="start">
+          <Text fontSize="md" fontWeight="semibold">
+            {exchangeToday.date.slice(-4).replace(/(\d{2})(\d{2})/, "$1/$2")}.
+          </Text>
+          <Text fontSize="md" fontWeight="semibold" color="gray.600">
+            USD/KRW
+          </Text>
+        </HStack>
+        <Text fontWeight="bold">{exchangeToday.rate.toLocaleString()}</Text>
+        <Text color={isUp ? "red.500" : "blue.500"}>
+          {Math.abs(Number(diff)).toFixed(2)} {isUp ? "▲" : "▼"}
+        </Text>
+      </HStack>
+    );
+  };
+
+  const renderCarbon = () => {
+    if (!carbonToday) return <Text>카본 데이터 없음</Text>;
+    const isUp = parseFloat(carbonToday.compare) > 0;
+
+    return (
+      <HStack justify="space-between" align="center" px={10}>
+        <HStack gap={4} align="start">
+          <Text fontSize="md" fontWeight="semibold">
+            {carbonToday.date.slice(5).replace(/-/g, ".")}.
+          </Text>
+          <Text fontSize="md" fontWeight="semibold" color="gray.600">
+            배출권시세
+          </Text>
+        </HStack>
+        <Text fontWeight="bold">
+          {Number(carbonToday.price).toLocaleString()}￦
+        </Text>
+
+        <Text color={isUp ? "red.500" : "blue.500"}>
+          {Math.abs(Number(carbonToday.compare)).toFixed(2)} {isUp ? "▲" : "▼"}
+        </Text>
+      </HStack>
+    );
+  };
 
   return (
-    <Box p={4} bg="white" borderRadius="lg" shadow="md" w="full" h="300px">
-      <Text fontSize="lg" fontWeight="bold" mb={3}>
-        최근 5일 USD → KRW 환율
-      </Text>
-
-      {loading ? (
-        <Spinner />
-      ) : error ? (
-        <Text color="red.500">{error}</Text>
-      ) : (
-        <ResponsiveContainer width="100%" height="80%">
-          <LineChart data={data}>
-            <XAxis dataKey="date" />
-            <YAxis />
-            <Tooltip />
-            <Line type="monotone" dataKey="rate" stroke="#3182ce" strokeWidth={2} />
-          </LineChart>
-        </ResponsiveContainer>
-      )}
+    <Box
+      p={0}
+      bg="white"
+      width="100%"
+      maxW="360px"
+      h="60px"
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      position="relative"
+      overflow="hidden"
+    >
+      <AnimatePresence mode="wait">
+        <MotionBox
+          key={showCarbon ? "carbon" : "exchange"}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.4 }}
+          width="100%"
+        >
+          {showCarbon ? renderCarbon() : renderExchange()}
+        </MotionBox>
+      </AnimatePresence>
     </Box>
-  )
-}
+  );
+};
 
-export default ExchangeRateChart
+export default Ticker;

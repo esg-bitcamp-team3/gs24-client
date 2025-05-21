@@ -1,7 +1,6 @@
 "use client";
 import CHO_HANGUL from "@/lib/data/esgTermJson/CHO_HANGUL.json";
 import allTags from "@/lib/data/esgTermJson/allTags.json";
-import consonants from "@/lib/data/esgTermJson/consonants.json";
 
 import { EsgTerm } from "@/lib/api/interfaces/esgTerms";
 import {
@@ -10,12 +9,11 @@ import {
   Checkbox,
   Flex,
   HStack,
+  Input,
   Text,
   VStack,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
-
-// 초성별로 분류하기위해서 정의 함
 
 const getInitialConsonant = (str: string) => {
   const code = str.charCodeAt(0) - 44032;
@@ -35,6 +33,8 @@ export default function VocabularyPage({
   const [selectedConsonant, setSelectedConsonant] = useState("전체");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState(""); // ✅ 검색 상태
+
   const itemsPerPage = 6;
 
   const handleCategoryToggle = (tag: string) => {
@@ -50,7 +50,11 @@ export default function VocabularyPage({
     const matchesTags =
       selectedTags.length === 0 ||
       selectedTags.every((tag) => term.tags.includes(tag));
-    return matchesConsonant && matchesTags;
+    const matchesSearch =
+      term.term.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      term.english.toLowerCase().includes(searchTerm.toLowerCase());
+
+    return matchesConsonant && matchesTags && matchesSearch;
   });
 
   const pagedTerms = filteredTerms.slice(
@@ -61,26 +65,39 @@ export default function VocabularyPage({
   const totalPages = Math.ceil(filteredTerms.length / itemsPerPage);
 
   return (
-    <Flex
-      direction={{ base: "column", md: "row" }}
-      align="flex-start"
-      justify="center"
-      wrap="wrap"
-      gap={4}
-      mt={6}
-      w="100%"
-    >
-      {/* 좌측 카테고리 필터 */}
+    <Flex w="100%">
+      {/* 고정된 사이드바 */}
       <Box
-        w={{ base: "100%", md: "240px" }}
-        bg="blue.50"
-        p={4}
-        borderRadius="md"
-        flexShrink={0}
+        position="fixed"
+        top="64px"
+        left="0"
+        h="calc(100vh - 64px)"
+        w="260px"
+        bg="white"
+        p={6}
+        borderRight="1px solid #e2e8f0"
+        overflowY="auto"
+        zIndex={100}
+        display="flex"
+        flexDirection="column"
+        gap={4}
       >
-        <h4>ESG 용어</h4>
-        <VStack align="start">
-          <Text mb={2}>주제 카테고리</Text>
+        <Text
+          fontSize="xl"
+          fontWeight="extrabold"
+          textAlign="center"
+          color="gray.700"
+        >
+          📘 ESG 필터
+        </Text>
+
+        <Box
+          display="grid"
+          gridTemplateColumns="repeat(2, 1fr)"
+          gap={2}
+          justifyItems="center"
+          alignItems="center"
+        >
           {allTags.map((tag) => (
             <Checkbox.Root
               key={tag}
@@ -88,51 +105,82 @@ export default function VocabularyPage({
               onCheckedChange={() => handleCategoryToggle(tag)}
             >
               <Checkbox.HiddenInput />
-              <Checkbox.Control />
-              <Checkbox.Label>{tag}</Checkbox.Label>
+              <Checkbox.Control display="none" />
+              <Checkbox.Label w="100%">
+                <Text
+                  w="100%"
+                  textAlign="center"
+                  fontSize="xs"
+                  px={2}
+                  py={1.5}
+                  borderRadius="full"
+                  boxShadow="sm"
+                  fontWeight="medium"
+                  bg={selectedTags.includes(tag) ? "blue.500" : "gray.100"}
+                  color={selectedTags.includes(tag) ? "white" : "gray.700"}
+                  transition="all 0.2s"
+                  _hover={{
+                    bg: selectedTags.includes(tag) ? "blue.600" : "gray.200",
+                    cursor: "pointer",
+                  }}
+                >
+                  {tag}
+                </Text>
+              </Checkbox.Label>
             </Checkbox.Root>
           ))}
-        </VStack>
+        </Box>
       </Box>
 
-      {/* 우측 본문 */}
-      <Box flex="1" p={4}>
-        {/* 자모 탭 */}
-        <HStack overflowX="auto" gap={2} mb={4}>
-          <Button onClick={() => setSelectedConsonant("전체")} variant="solid">
-            전체
-          </Button>
-          {consonants.map((c) => (
-            <Button
-              key={c}
-              size="sm"
-              onClick={() => setSelectedConsonant(c)}
-              variant={selectedConsonant === c ? "solid" : "outline"}
-            >
-              {c}
-            </Button>
-          ))}
-        </HStack>
+      {/* 본문 콘텐츠 */}
+      <Box pl={{ base: 0, md: "280px" }} flex="1" mt={6} pb="100px">
+        {/* ✅ 검색창 추가 */}
+        <Box mb={4} px={4}>
+          <Input
+            placeholder="검색어를 입력하세요 (한글 or 영어)"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            size="md"
+            borderRadius="md"
+            borderColor="gray.300"
+            _focus={{ borderColor: "blue.400", boxShadow: "0 0 0 1px #3182ce" }}
+          />
+        </Box>
 
-        {/* 표 형태 목록 */}
-        <VStack align="stretch" gap={2}>
+        <VStack align="stretch" gap={3}>
           {pagedTerms.map((term, index) => (
             <Flex
               key={index}
               justify="space-between"
               bg="gray.50"
-              p={3}
-              borderRadius="md"
-              border="1px solid #eee"
+              p={4}
+              borderRadius="lg"
+              border="1px solid #e2e8f0"
+              _hover={{
+                boxShadow: "lg",
+                transform: "translateY(-2px)",
+                transition: "0.2s",
+              }}
             >
               <Box>
-                <Text fontWeight="bold">{term.term}</Text>
-                <Text fontSize="sm" color="gray.500">
+                <Text fontWeight="bold" fontSize="lg">
+                  {term.term}
+                </Text>
+                <Text fontSize="sm" color="gray.500" mt={1}>
                   {term.english}
                 </Text>
-                <HStack mt={2} gap={3}>
+                <HStack mt={3} gap={2}>
                   {term.tags.map((tag) => (
-                    <Text key={tag} fontSize="sm" color="teal.600">
+                    <Text
+                      key={tag}
+                      fontSize="xs"
+                      color="white"
+                      bg="teal.500"
+                      px={2}
+                      py={1}
+                      borderRadius="md"
+                      fontWeight="semibold"
+                    >
                       {tag}
                     </Text>
                   ))}
@@ -143,35 +191,49 @@ export default function VocabularyPage({
         </VStack>
 
         {/* 페이지네이션 */}
-        <HStack justify="center" mt={6}>
-          {(() => {
-            const maxButtons = 10;
-            let startPage = Math.max(
-              1,
-              currentPage - Math.floor(maxButtons / 2)
-            );
-            let endPage = startPage + maxButtons - 1;
-
-            if (endPage > totalPages) {
-              endPage = totalPages;
-              startPage = Math.max(1, endPage - maxButtons + 1);
-            }
-
-            return Array.from({ length: endPage - startPage + 1 }, (_, i) => {
-              const pageNumber = startPage + i;
-              return (
-                <Button
-                  key={pageNumber}
-                  size="sm"
-                  onClick={() => setCurrentPage(pageNumber)}
-                  variant={currentPage === pageNumber ? "solid" : "outline"}
-                >
-                  {pageNumber}
-                </Button>
+        <Box
+          position="fixed"
+          bottom="0"
+          left={{ base: "0", md: "280px" }}
+          right="0"
+          py={3}
+          bg="whiteAlpha.900"
+          boxShadow="md"
+          borderTop="1px solid #e2e8f0"
+          zIndex={200}
+          display="flex"
+          justifyContent="center"
+        >
+          <HStack gap={2}>
+            {(() => {
+              const maxButtons = 10;
+              let startPage = Math.max(
+                1,
+                currentPage - Math.floor(maxButtons / 2)
               );
-            });
-          })()}
-        </HStack>
+              let endPage = startPage + maxButtons - 1;
+              if (endPage > totalPages) {
+                endPage = totalPages;
+                startPage = Math.max(1, endPage - maxButtons + 1);
+              }
+
+              return Array.from({ length: endPage - startPage + 1 }, (_, i) => {
+                const pageNumber = startPage + i;
+                return (
+                  <Button
+                    key={pageNumber}
+                    size="sm"
+                    variant={currentPage === pageNumber ? "solid" : "outline"}
+                    colorScheme="blue"
+                    onClick={() => setCurrentPage(pageNumber)}
+                  >
+                    {pageNumber}
+                  </Button>
+                );
+              });
+            })()}
+          </HStack>
+        </Box>
       </Box>
     </Flex>
   );

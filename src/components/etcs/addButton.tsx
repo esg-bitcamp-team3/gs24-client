@@ -15,12 +15,15 @@ const AddButton = ({
   orgId,
   interestList,
   setInterestList,
+  checked, // 추가
 }: {
   orgId: string;
   interestList: string[];
   setInterestList: React.Dispatch<React.SetStateAction<string[]>>;
+  checked?: boolean; // 추가
 }) => {
-  const isInterested = interestList.includes(orgId);
+  const isInterested =
+    typeof checked === "boolean" ? checked : interestList.includes(orgId);
 
   const handleClick = () => {
     setInterestList((prev) =>

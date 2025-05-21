@@ -1,6 +1,15 @@
 "use client";
 import { getCorporationsWithInterest } from "@/lib/api/get";
-import { Box, Button, Input, Dialog, Portal, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Input,
+  Dialog,
+  Portal,
+  Text,
+  HStack,
+  VStack,
+} from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import React, {
   ReactNode,
@@ -51,7 +60,7 @@ const AddOrg = ({ label, id, onSaved }: SearchOrgProps) => {
     setLoading(true);
 
     try {
-      const data = await getCorporationsWithInterest(page); // 서버에서 page별 로딩
+      const data = await getCorporationsWithInterest(); // 서버에서 page별 로딩
       console.log("🔥 data", data);
 
       setCompanyList((prev) => [...prev, ...data.corpWithInterestDTOList]);
@@ -106,61 +115,98 @@ const AddOrg = ({ label, id, onSaved }: SearchOrgProps) => {
       placement="center"
     >
       <Dialog.Trigger asChild>
-        <Button variant="outline" size="sm" padding={3}>
+        <Button
+          variant="solid"
+          size="md"
+          colorScheme="green"
+          borderRadius="full"
+          px={6}
+          py={2}
+          fontWeight="bold"
+          boxShadow="md"
+        >
           {label}
         </Button>
       </Dialog.Trigger>
 
       <Portal>
-        <Dialog.Backdrop />
+        <Dialog.Backdrop bg="blackAlpha.400" />
         <Dialog.Positioner>
-          <Dialog.Content padding={4}>
+          <Dialog.Content
+            padding={6}
+            borderRadius="2xl"
+            bg="white"
+            boxShadow="2xl"
+            minW="350px"
+            maxW="400px"
+          >
             <Dialog.Header>
               <Input
                 paddingLeft={3}
                 marginBottom={3}
-                placeholder="search"
+                placeholder="기업명 검색"
                 value={searchTerm}
+                borderRadius="full"
+                bg="gray.50"
+                borderColor="green.200"
                 onChange={(e) =>
                   setSearchTerm((e.target as HTMLInputElement).value)
                 }
               />
             </Dialog.Header>
 
-            <Dialog.Body pt="4">
-              <Box height={300} overflowY="scroll" ref={scrollContainerRef}>
+            <Dialog.Body pt={2}>
+              <Box
+                height={320}
+                overflowY="auto"
+                ref={scrollContainerRef}
+                bg="gray.50"
+                borderRadius="xl"
+                borderWidth="1px"
+                borderColor="green.100"
+                p={2}
+              >
                 {filteredCompanies.length === 0 ? (
-                  <Text color="gray.500" textAlign="center">
+                  <Text color="gray.400" textAlign="center" py={8}>
                     No companies found.
                   </Text>
                 ) : (
-                  filteredCompanies.map((company) => (
-                    <Box
-                      key={company.corporation.corpCode}
-                      display="flex"
-                      w="90%"
-                    >
-                      <Button
-                        paddingLeft={3}
-                        variant="ghost"
-                        color="black"
-                        justifyContent="flex-start"
-                        w={"100%"}
-                      >
-                        {company.corporation.corpName}
-                      </Button>
-                      <AddButton
-                        orgId={company.corporation.id}
-                        interestList={interestList}
-                        setInterestList={setInterestList}
-                      />
-                    </Box>
-                  ))
+                  <VStack gap={0} align="stretch" w="100%">
+                    {filteredCompanies.map((company, idx) => (
+                      <React.Fragment key={company.corporation.corpCode}>
+                        <HStack
+                          w="100%"
+                          px={3}
+                          py={2}
+                          bg={
+                            interestList.includes(company.corporation.id)
+                              ? "green.50"
+                              : "white"
+                          }
+                          borderRadius="lg"
+                          _hover={{ bg: "green.50" }}
+                          transition="background 0.2s"
+                          justifyContent="space-between"
+                        >
+                          <Text fontWeight="medium" color="green.800">
+                            {company.corporation.corpName}
+                          </Text>
+                          <AddButton
+                            orgId={company.corporation.id}
+                            interestList={interestList}
+                            setInterestList={setInterestList}
+                            checked={interestList.includes(
+                              company.corporation.id
+                            )} // 추가
+                          />
+                        </HStack>
+                      </React.Fragment>
+                    ))}
+                  </VStack>
                 )}
-                {/* 스크롤 끝 감지 트리거 */}
                 <Box ref={observerRef} h={"5%"} />
                 {loading && (
-                  <Text textAlign="center" color="gray.500">
+                  <Text textAlign="center" color="gray.500" py={2}>
                     Loading...
                   </Text>
                 )}
@@ -170,13 +216,13 @@ const AddOrg = ({ label, id, onSaved }: SearchOrgProps) => {
               <Button
                 variant="solid"
                 colorScheme="green"
-                marginTop={3}
-                padding={3}
+                borderRadius="full"
+                fontWeight="bold"
+                flex={1}
                 onClick={async () => {
                   try {
                     await postCorporationCategory({ idList: interestList }, id);
                     if (onSaved) onSaved();
-                    // 토스트 메시지 (예시)
                     toaster.create({
                       title: "저장에 성공했습니다.",
                       type: "success",
@@ -190,11 +236,11 @@ const AddOrg = ({ label, id, onSaved }: SearchOrgProps) => {
                   }
                 }}
               >
-                Save
+                저장
               </Button>
               <Dialog.ActionTrigger asChild>
-                <Button variant="outline" marginTop={3} padding={3}>
-                  Close
+                <Button variant="outline" borderRadius="full" flex={1}>
+                  닫기
                 </Button>
               </Dialog.ActionTrigger>
             </Dialog.Footer>

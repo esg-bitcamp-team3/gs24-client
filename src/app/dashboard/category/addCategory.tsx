@@ -1,4 +1,3 @@
-import { postCategory } from "@/lib/api/post";
 import { Button, Dialog, Field, Input, Portal, Stack } from "@chakra-ui/react";
 import { useRef } from "react";
 import { useState } from "react";

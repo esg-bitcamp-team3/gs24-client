@@ -1,12 +1,11 @@
 "use client";
 
-import { useForm, Controller, DefaultValues } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import {
   Box,
   Button,
   Dialog,
   Portal,
-  Text,
   Checkbox,
   Fieldset,
   CheckboxGroup,
@@ -16,8 +15,8 @@ import React, { useEffect, useState } from "react";
 import { InterestButtonProps } from "@/lib/api/interfaces/interestOrganization";
 import { FcLikePlaceholder } from "react-icons/fc";
 import { FcLike } from "react-icons/fc";
-import { getInterestCorporation } from "@/lib/api/get";
-import { deleteCategory, deleteInterestCorporation } from "@/lib/api/delete";
+import { getCategory, getInterestCorporation } from "@/lib/api/get";
+import { deleteCategory } from "@/lib/api/delete";
 import {
   postCoporationCategries,
   postInterestCorporation,
@@ -81,7 +80,7 @@ const InterestButton = ({ orgId }: InterestButtonProps) => {
         if (data) {
           setIsInterested(true);
         }
-        const categorydata = await getMyCategory();
+        const categorydata = await getCategory();
         setCategoryList(categorydata || []);
       } catch (error) {
         console.error("Error fetching data:", error);

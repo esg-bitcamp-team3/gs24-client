@@ -52,6 +52,7 @@ export interface InterestCorporationDetail {
 export interface Category {
   id: string;
   name: string;
+  userId: string;
 }
 
 export interface CategoryCorporation {

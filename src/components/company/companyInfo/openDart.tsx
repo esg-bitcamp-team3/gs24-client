@@ -28,7 +28,7 @@ const OpenDart = ({ corpCode }: OpenDartProps) => {
   return (
     <Dialog.Root size="cover" placement="center" motionPreset="slide-in-bottom">
       <Dialog.Trigger asChild>
-        <Button variant="outline" size="sm">
+        <Button padding={4} variant="outline" size="sm">
           재무제표 보기
         </Button>
       </Dialog.Trigger>

@@ -24,8 +24,8 @@ import { InfoItem } from "@/components/etcs/InfoItem";
 import OpenDart from "./openDart";
 import RealTimeChart from "./RealTimeChart";
 
-import { FaBuilding, FaChartLine, FaNewspaper } from "react-icons/fa";
-
+import { FaChartLine, FaNewspaper } from "react-icons/fa";
+import KeywordNews from "../keywordTrend/KeywordNews";
 
 const CompanyInfoCard = ({ orgId }: { orgId: string }) => {
   const [corpInfo, setCorpInfo] = useState<CorporationInfo>();
@@ -75,7 +75,6 @@ const CompanyInfoCard = ({ orgId }: { orgId: string }) => {
 
   return (
     <Flex direction={{ base: "column", md: "column" }} gap={8}>
-
       {/* Company Information Card */}
       <Box {...CARD_STYLES} p={0} w={{ base: "100%", md: "100%" }}>
         <Box p={6}>
@@ -121,7 +120,6 @@ const CompanyInfoCard = ({ orgId }: { orgId: string }) => {
               value={corpInfo?.fax_no}
               isLoading={loading}
             />
-
             <InfoItem
               label="홈페이지"
               value={corpInfo?.hm_url}
@@ -137,7 +135,12 @@ const CompanyInfoCard = ({ orgId }: { orgId: string }) => {
               label="주소"
               value={corpInfo?.adres}
               isLoading={loading}
-              gridColumn={{ md: "1 / 4" }}
+              gridColumn={{ md: "1 / 2" }}
+            />
+            <InfoItem
+              label="재무재표"
+              value={<OpenDart corpCode={corpInfo?.corp_code || ""} />}
+              isLoading={loading}
             />
           </SimpleGrid>
         </Box>
@@ -145,13 +148,6 @@ const CompanyInfoCard = ({ orgId }: { orgId: string }) => {
 
       <Flex direction={{ base: "column", md: "row" }} gap={8}>
         {/* 주가 차트 */}
-
-        <Box {...CARD_STYLES} p={6} w={{ base: "100%", md: "50%" }}>
-          <Text {...HEADING_STYLES}>주가 차트</Text>
-          <Separator mt={2} mb={4} />
-          <Box>
-            <RealTimeChart corpStockCode={corpInfo?.stock_code || ""} />
-
         <Box {...CARD_STYLES} w={{ base: "100%", md: "50%" }}>
           <Box bg="teal.50" p={4} borderBottom="1px" borderColor="teal.100">
             <Text {...HEADING_STYLES}>
@@ -172,11 +168,8 @@ const CompanyInfoCard = ({ orgId }: { orgId: string }) => {
                 <Skeleton height="20px" w="80%" />
               </Flex>
             ) : (
-              <Text color="gray.500" fontSize="md">
-                주가 차트 데이터가 준비 중입니다
-              </Text>
+              <RealTimeChart corpStockCode={corpInfo?.stock_code || ""} />
             )}
-
           </Box>
         </Box>
 
@@ -204,9 +197,7 @@ const CompanyInfoCard = ({ orgId }: { orgId: string }) => {
                 <Skeleton height="20px" w="80%" />
               </Flex>
             ) : (
-              <Text color="gray.500" fontSize="md">
-                뉴스 데이터가 준비 중입니다
-              </Text>
+              <KeywordNews query={corpInfo?.corp_name || ""} />
             )}
           </Box>
         </Box>

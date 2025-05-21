@@ -10,6 +10,8 @@ import { getCorporationInfo } from "@/lib/api/get";
 import { financeApi } from "@/lib/api/apiclient";
 import { CorporationInfo } from "@/lib/api/interfaces/corporation";
 import { InfoItem } from "@/components/etcs/InfoItem";
+import OpenDart from "./openDart";
+import RealTimeChart from "./RealTimeChart";
 
 const CompanyInfoCard = ({ orgId }: { orgId: string }) => {
   const [corpInfo, setCorpInfo] = useState<CorporationInfo>();
@@ -22,7 +24,8 @@ const CompanyInfoCard = ({ orgId }: { orgId: string }) => {
         const corpId = await financeApi.get(
           `/company?&corp_code=${data?.corpCode}`
         );
-        console.log("🔥 기업 아이디:", corpId.data);
+        console.log("corpId", corpId.data);
+
         setCorpInfo(corpId.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -60,6 +63,20 @@ const CompanyInfoCard = ({ orgId }: { orgId: string }) => {
         </Text>
         <InterestButton orgId={orgId} />
       </Flex> */}
+      <Box
+        fontWeight="bold"
+        borderRadius="4xl"
+        bg={"white"}
+        padding={8}
+        position="absolute"
+        // top="20px" // 원하는 만큼 margin
+        right="20px"
+        cursor="pointer"
+        zIndex={1000} // 다른 요소 위에 오도록
+      >
+        <OpenDart corpCode={corpInfo?.corp_code ?? ""} />
+      </Box>
+
       <Box {...CARD_STYLES} p={6} w={{ base: "100%", md: "100%" }}>
         <Flex justify={"space-between"}>
           <Flex
@@ -100,7 +117,9 @@ const CompanyInfoCard = ({ orgId }: { orgId: string }) => {
         <Box {...CARD_STYLES} p={6} w={{ base: "100%", md: "50%" }}>
           <Text {...HEADING_STYLES}>주가 차트</Text>
           <Separator mt={2} mb={4} />
-          <Box>주가 차트</Box>
+          <Box>
+            <RealTimeChart corpStockCode={corpInfo?.stock_code || ""} />
+          </Box>
         </Box>
 
         {/* 기업 뉴스 */}

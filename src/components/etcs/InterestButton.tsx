@@ -112,7 +112,7 @@ const InterestButton = ({ orgId }: InterestButtonProps) => {
     <>
       <Button
         color="black"
-        bg="white"
+        bg="blue.50"
         onClick={() =>
           isInterested
             ? handleClick()
@@ -195,7 +195,7 @@ const InterestButton = ({ orgId }: InterestButtonProps) => {
                                     style={{
                                       display: "flex",
                                       alignItems: "center",
-                                      backgroundColor: "#f5f5f5",
+                                      // backgroundColor: "#f5f5f5",
                                       borderRadius: "8px",
                                     }}
                                   >

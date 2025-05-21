@@ -1,15 +1,52 @@
+"use client";
+
 import InterestButton from "@/components/etcs/InterestButton";
 import SideBar from "@/components/sideBar";
+import { financeApi } from "@/lib/api/apiclient";
 import { getCorporationInfo } from "@/lib/api/get";
-import { Box, Flex, Separator, Text } from "@chakra-ui/react";
-import { ReactNode } from "react";
+import { Corporation, CorporationInfo } from "@/lib/api/interfaces/corporation";
+import { Badge, Box, Flex, Icon, Separator, Text } from "@chakra-ui/react";
+import { useParams } from "next/navigation";
+import { ReactNode, useEffect, useState } from "react";
+import { FaBuilding } from "react-icons/fa";
 
 interface LayoutProps {
-  children: ReactNode;
-  params: { id: string };
+  children: React.ReactNode;
 }
-export default async function CorpId({ children, params }: LayoutProps) {
-  const companyinfo = await getCorporationInfo(params.id);
+
+export default function Layout({ children }: LayoutProps) {
+  const [companyinfo, setCompanyInfo] = useState<CorporationInfo>();
+  const params = useParams();
+  const { id } = params as { id: string };
+
+  useEffect(() => {
+    if (!id) return;
+
+    const fetchData = async () => {
+      try {
+        const data = await getCorporationInfo(id);
+        const corpId = await financeApi.get(
+          `/company?&corp_code=${data?.corpCode}`
+        );
+        console.log("🔥 기업 아이디:", corpId.data);
+        setCompanyInfo(corpId.data);
+      } catch (error) {
+        console.error("Error fetching corporation info:", error);
+      }
+    };
+    fetchData();
+  }, [id]);
+
+  const CARD_STYLES = {
+    bg: "white",
+    borderRadius: "xl",
+    boxShadow: "0 4px 20px rgba(0, 0, 0, 0.08)",
+    transition: "all 0.3s ease",
+    _hover: {
+      boxShadow: "0 6px 25px rgba(0, 0, 0, 0.12)",
+    },
+    overflow: "hidden",
+  };
 
   return (
     <>
@@ -21,15 +58,28 @@ export default async function CorpId({ children, params }: LayoutProps) {
         maxH="full"
         bg={"#f7f7f7"}
       >
-        <Flex align="center" ml={4} gap={2} mb={4}>
-          <Separator orientation="vertical" height="1.75em" borderWidth="2px" />
-          <Text fontSize="3xl" fontWeight="bold">
-            {companyinfo?.corpName}
-          </Text>
-          <Box ml={4}>
-            {companyinfo?.id && <InterestButton orgId={companyinfo.id} />}
+        <Box {...CARD_STYLES} p={0} w={{ base: "100%", md: "100%" }}>
+          <Box bg="blue.50" p={4} borderBottom="1px" borderColor="blue.100">
+            <Flex align="center" gap={3}>
+              <Icon as={FaBuilding} boxSize={6} color="blue.500" />
+              <Text fontSize="2xl" fontWeight="bold" color="gray.700">
+                {companyinfo?.corp_name}
+              </Text>
+              {companyinfo?.stock_name && (
+                <Badge
+                  colorScheme="blue"
+                  fontSize="sm"
+                  borderRadius="full"
+                  px={3}
+                  py={1}
+                >
+                  {companyinfo.stock_name}
+                </Badge>
+              )}
+              {id && <InterestButton orgId={id} />}
+            </Flex>
           </Box>
-        </Flex>
+        </Box>
         {children}
       </Box>
     </>

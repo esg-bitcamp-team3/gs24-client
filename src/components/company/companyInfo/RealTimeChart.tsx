@@ -440,7 +440,7 @@ export default function RealTimeChart({ corpStockCode }: chartProps) {
       <Box position="relative" h="320px">
         {isLoading ? (
           <Flex h="100%" justifyContent="center" alignItems="center">
-            <Spinner color="indigo.500" size="xl" />
+            <Spinner size="lg" color="blue.500" borderWidth="3px" />
           </Flex>
         ) : error ? (
           <Flex

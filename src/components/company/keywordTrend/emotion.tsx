@@ -56,7 +56,7 @@ const EmotionCard = ({ orgname }: Props) => {
         gap={3}
         h={"100%"}
       >
-        <Spinner size="lg" color="blue.500" borderWidth={"4px"} />
+        <Spinner size="lg" color="blue.500" borderWidth="3px" />
         <Text fontSize="sm" color="gray.500">
           감정 분석 중...
         </Text>

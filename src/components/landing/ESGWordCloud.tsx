@@ -144,7 +144,7 @@ export default function WordCloudExample({
     return (
       <Center h="300px" py={8} borderRadius="lg" boxShadow="sm">
         <VStack gap={4}>
-          <Spinner size="xl" color="teal.500" />
+          <Spinner size="lg" color="blue.500" borderWidth="3px" />
           <Text color="gray.600" fontWeight="medium"></Text>
         </VStack>
       </Center>

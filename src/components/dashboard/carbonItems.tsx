@@ -134,7 +134,7 @@ const CarbonItemsChart = () => {
         </Table.Header>
 
         {loading ? (
-          <Spinner />
+          <Spinner size="lg" color="blue.500" borderWidth="3px" />
         ) : error ? (
           <Text color="red.500">{error}</Text>
         ) : (

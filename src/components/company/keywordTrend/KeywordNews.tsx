@@ -101,7 +101,7 @@ export default function KeywordNews({
     return (
       <Center py={6}>
         <VStack gap={3}>
-          <Spinner size="md" color="teal.500" borderWidth={"4px"} />
+          <Spinner size="lg" color="blue.500" borderWidth="3px" />
           <Text fontSize="sm" color="gray.600">
             뉴스를 불러오는 중입니다. 잠시만 기다려주세요
           </Text>

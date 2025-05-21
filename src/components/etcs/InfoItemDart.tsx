@@ -20,7 +20,7 @@ export const InfoItemDart = ({
   ...gridProps
 }: InfoItemProps) => (
   <GridItem {...gridProps}>
-    <Flex direction="column" gap={1}>
+    <Flex direction="row" gap={1}>
       <Text fontSize="sm" fontWeight="medium" color="gray.600">
         {label}
       </Text>

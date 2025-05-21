@@ -1,17 +1,8 @@
 "use client";
 
-import {
-  Avatar,
-  Box,
-  Button,
-  Flex,
-  HStack,
-  IconButton,
-  Image,
-} from "@chakra-ui/react";
+import { Box, Button, Flex, Image } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { LuLogOut, LuSearch } from "react-icons/lu";
 import { logout } from "@/lib/api/auth";
 import Searching from "./navbar/searching";
 import { FaSearch } from "react-icons/fa";
@@ -22,7 +13,7 @@ import { useState, useEffect } from "react";
 import { checkLogin } from "@/lib/api/auth";
 import { CgProfile } from "react-icons/cg";
 import { FaBookOpen } from "react-icons/fa6";
-import { FaHeart } from "react-icons/fa";
+import { FaRegHeart } from "react-icons/fa";
 
 // 백엔드에서 받아온 회사 리스트의 타입을 정의
 
@@ -72,9 +63,9 @@ const Navbar: React.FC = () => {
       <Flex align="center" flex={1} maxW="450px">
         <Box mr={6}>
           <Image
-            src="/logo.png"
-            height="35px"
-            onClick={() => router.push("/dashboard")}
+            src="/logo_2.png"
+            height="50px"
+            onClick={() => router.push("/")}
             cursor="pointer"
             _hover={{ transform: "scale(1.05)" }}
             transition="all 0.2s"
@@ -105,20 +96,22 @@ const Navbar: React.FC = () => {
 
       <Flex align="center" justify="flex-end" flex={1} maxW="400px" gap={2}>
         {/* 용어 사전 ================================== */}
-        <Button
-          onClick={() => router.push("/dashboard/category")}
-          variant="ghost"
-          borderRadius="lg"
-          minW="44px"
-          h="44px"
-          fontWeight="semibold"
-          fontSize="md"
-          transition="all 0.2s"
-          px={3}
-        >
-          <FaHeart color="red" />
-          관심기업
-        </Button>
+        {isLoggedIn && (
+          <Button
+            onClick={() => router.push("/dashboard/category")}
+            variant="ghost"
+            borderRadius="lg"
+            minW="44px"
+            h="44px"
+            fontWeight="semibold"
+            fontSize="md"
+            transition="all 0.2s"
+            px={3}
+          >
+            <FaRegHeart />
+            관심기업
+          </Button>
+        )}
         <Button
           onClick={() => router.push("/dashboard/vocabulary")}
           variant="ghost"
@@ -127,7 +120,7 @@ const Navbar: React.FC = () => {
           h="44px"
           fontWeight="semibold"
           fontSize="md"
-          _hover={{ bg: "gray.50" }}
+          _hover={{ bg: "gray.100" }}
           transition="all 0.2s"
           px={3}
         >
@@ -180,19 +173,9 @@ const Navbar: React.FC = () => {
               bg: "gray.200",
             }}
           >
-            <CgProfile size='24px'/>
+            <CgProfile size="24px" />
           </Button>
         )}
-
-        {/* <div
-          onClick={() => router.push("/myPage")}
-          style={{ cursor: "pointer" }}
-        >
-          <Avatar.Root shape="full" size="lg">
-            <Avatar.Fallback name="Segun Adebayo" />
-            <Avatar.Image src="@public/user.png" />
-          </Avatar.Root>
-        </div> */}
       </Flex>
     </Flex>
   );

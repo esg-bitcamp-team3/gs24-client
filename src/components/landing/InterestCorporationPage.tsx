@@ -1,16 +1,10 @@
 import React from "react";
 import {
   Box,
-  Flex,
   Heading,
   Text,
-  Badge,
   VStack,
-  HStack,
   Icon,
-  Button,
-  Select,
-  Stat,
   SimpleGrid,
 } from "@chakra-ui/react";
 import { MdBookmark, MdFolderSpecial, MdNotifications } from "react-icons/md";
@@ -125,51 +119,6 @@ const InterestCorporationPage = () => {
           </Text>
         </VStack>
       </SimpleGrid>
-      <Box textAlign="center" mt={16}>
-        <Button
-          onClick={handleLogin}
-          size="lg"
-          px={10}
-          py={7}
-          fontSize="xl"
-          fontWeight="bold"
-          bgGradient="linear(to-r, blue.500, purple.600)"
-          color="white"
-          _hover={{
-            _before: {
-              transform: "translateX(100%)",
-              transition: "transform 1s ease",
-            },
-            bgGradient: "linear(to-r, blue.600, purple.700)",
-            transform: "translateY(-2px)",
-            boxShadow: "0 10px 25px -5px rgba(66, 153, 225, 0.4)",
-          }}
-          _active={{
-            bgGradient: "linear(to-r, blue.700, purple.800)",
-            transform: "translateY(0)",
-          }}
-          transition="all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
-          borderRadius="full"
-          boxShadow="0 5px 20px -5px rgba(66, 153, 225, 0.5)"
-          letterSpacing="wide"
-          position="relative"
-          overflow="hidden"
-          _before={{
-            content: '""',
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            bgGradient:
-              "linear(to-r, transparent, rgba(255,255,255,0.2), transparent)",
-            transform: "translateX(-100%)",
-          }}
-        >
-          로그인 해버리기
-          <LuArrowRight />
-        </Button>
-      </Box>
     </Box>
   );
 };

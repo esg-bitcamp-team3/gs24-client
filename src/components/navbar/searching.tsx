@@ -1,15 +1,13 @@
 "use client";
-import { getCorporationList, getCorporationsWithInterest } from "@/lib/api/get";
+import { getCorporationList } from "@/lib/api/get";
 import { Box, Button, Input, Text } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
-import InterestButton from "../etcs/InterestButton";
 import {
   Corporation,
   CorpWithInterest,
 } from "@/lib/api/interfaces/corporation";
 import { FixedSizeList as List } from "react-window";
-import { checkLogin } from "@/lib/api/auth";
 import { useClickAway } from "react-use";
 
 interface rowProps {

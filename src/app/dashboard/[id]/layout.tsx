@@ -4,10 +4,10 @@ import InterestButton from "@/components/etcs/InterestButton";
 import SideBar from "@/components/sideBar";
 import { financeApi } from "@/lib/api/apiclient";
 import { getCorporationInfo } from "@/lib/api/get";
-import { Corporation, CorporationInfo } from "@/lib/api/interfaces/corporation";
-import { Badge, Box, Flex, Icon, Separator, Text } from "@chakra-ui/react";
+import { CorporationInfo } from "@/lib/api/interfaces/corporation";
+import { Badge, Box, Flex, Icon, Text } from "@chakra-ui/react";
 import { useParams } from "next/navigation";
-import { ReactNode, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { FaBuilding } from "react-icons/fa";
 
 interface LayoutProps {
@@ -38,13 +38,13 @@ export default function Layout({ children }: LayoutProps) {
   }, [id]);
 
   const CARD_STYLES = {
-    bg: "white",
+    // bg: "white",
     borderRadius: "xl",
-    boxShadow: "0 4px 20px rgba(0, 0, 0, 0.08)",
-    transition: "all 0.3s ease",
-    _hover: {
-      boxShadow: "0 6px 25px rgba(0, 0, 0, 0.12)",
-    },
+    // boxShadow: "0 4px 20px rgba(0, 0, 0, 0.08)",
+    // transition: "all 0.3s ease",
+    // _hover: {
+    //   boxShadow: "0 6px 25px rgba(0, 0, 0, 0.12)",
+    // },
     overflow: "hidden",
   };
 

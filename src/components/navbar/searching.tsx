@@ -43,20 +43,8 @@ const Searching = () => {
 
   const loadCompanies = async () => {
     try {
-      const chkLogin = await checkLogin();
-      if (chkLogin) {
-        const data = await getCorporationList(); // 서버에서 page별 로딩
-        setCompanyList(data ?? []);
-      } else {
-        const data2 = await getCorporationList();
-        const withInterestFalse: CorpWithInterest[] = (data2 ?? []).map(
-          (corp) => ({
-            corporation: corp,
-            interested: false,
-          })
-        );
-        setCompanyList(withInterestFalse.map((item) => item.corporation));
-      }
+      const data = await getCorporationList();
+      setCompanyList(data || []);
     } catch (error) {
       console.error("Error fetching companies:", error);
     }
@@ -66,7 +54,6 @@ const Searching = () => {
       loadCompanies();
     }
     if (isDropdownOpen) {
-      // 다이얼로그 열리면 초기화
       setSearchTerm("");
     }
   }, [isDropdownOpen]);
@@ -92,7 +79,6 @@ const Searching = () => {
         >
           {company.corporation.corpName}
         </Button>
-        <InterestButton orgId={company.corporation.id} />
       </Box>
     );
   };
@@ -125,6 +111,10 @@ const Searching = () => {
               itemCount={filteredCompanies.length}
               itemSize={50}
               width="100%"
+              itemData={filteredCompanies.map((company) => ({
+                corporation: company,
+                interested: false,
+              }))}
             >
               {Row}
             </List>

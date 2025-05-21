@@ -1,5 +1,6 @@
 "use client";
 
+import { financeApi } from "@/lib/api/apiclient";
 import * as d3 from "d3";
 import { useEffect, useRef, useState } from "react";
 
@@ -7,19 +8,39 @@ interface PricePoint {
   time: Date;
   price: number;
 }
+interface chartProps {
+  corpStockCode: string;
+}
 
-export default function RealTimeChart() {
+export default function RealTimeChart({ corpStockCode }: chartProps) {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const [data, setData] = useState<PricePoint[]>([]);
-  const companyCode = "138930";
+
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, "0"); // 월은 0부터 시작하므로 +1
+  const dd = String(today.getDate()).padStart(2, "0");
+  const formatted = `${yyyy}${mm}${dd}`;
+
+  const oneMonthAgo = new Date(today);
+  oneMonthAgo.setMonth(today.getMonth() - 1);
+  // 월 말일 보정 (예: 3월 31일 - 1개월 → 2월 31일은 없는 날짜)
+  if (oneMonthAgo.getDate() !== today.getDate()) {
+    oneMonthAgo.setDate(0); // 이전 달의 말일로 자동 조정
+  }
+
+  const yyyyAgo = oneMonthAgo.getFullYear();
+  const mmAgo = String(oneMonthAgo.getMonth() + 1).padStart(2, "0");
+  const ddAgo = String(oneMonthAgo.getDate()).padStart(2, "0");
+  const formattedOneMonthAgo = `${yyyyAgo}${mmAgo}${ddAgo}`;
 
   // ✅ 컴포넌트 내부에 선언해야 인식됨!
   const fetchPrice = async (): Promise<void> => {
     try {
-      const res = await fetch(
-        `http://127.0.0.1:8000/api/stock/stock-history?code=${companyCode}&start_date=20250418&end_date=20250515&period_code=D&org_adj_prc=1`
+      const res = await financeApi.get(
+        `/stock-history?code=${corpStockCode}&start_date=${formattedOneMonthAgo}&end_date=${formatted}&period_code=D&org_adj_prc=1`
       );
-      const json = await res.json();
+      const json = await res.data;
 
       const chartData: PricePoint[] = (json.output2 || [])
         .map((entry: any) => ({

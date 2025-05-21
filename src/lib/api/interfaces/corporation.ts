@@ -1,4 +1,5 @@
 export interface CorporationInfo {
+  corp_code: string; // 고유번호
   corp_name: string; // 정식회사명칭
   corp_name_eng: string; // 영문정식회사명칭
   stock_name: string; // 종목명(상장사) 또는 약식명칭(기타법인)
@@ -51,6 +52,7 @@ export interface InterestCorporationDetail {
 export interface Category {
   id: string;
   name: string;
+  userId: string;
 }
 
 export interface CategoryCorporation {

@@ -165,7 +165,7 @@ export const getCategoryCorporation = async (id: string) => {
 
 export const getCategory = async () => {
   try {
-    const res = await apiClient.get<Category[]>(`categories/my`);
+    const res = await apiClient.get<Category[]>(`/categories/my`);
     return res.data;
   } catch (err) {
     handleApiError(err, "카테고리 찾기 실패");

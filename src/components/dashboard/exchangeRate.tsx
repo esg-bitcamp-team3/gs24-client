@@ -107,9 +107,7 @@ const Ticker = () => {
       const basDt = getPreviousBusinessDay(); // 💡 요일 고려된 날짜 계산
 
       try {
-        const res = await marketApi.get(
-          `/carbon-price?basDt=${basDt}&itmsNm=KAU24`
-        );
+        const res = await marketApi.get(`/carbon-price`);
 
         const item = res.data[0];
         if (item) {

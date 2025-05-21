@@ -20,7 +20,12 @@ import { getCorporationInfo } from "@/lib/api/get";
 import { financeApi } from "@/lib/api/apiclient";
 import { CorporationInfo } from "@/lib/api/interfaces/corporation";
 import { InfoItem } from "@/components/etcs/InfoItem";
+
+import OpenDart from "./openDart";
+import RealTimeChart from "./RealTimeChart";
+
 import { FaBuilding, FaChartLine, FaNewspaper } from "react-icons/fa";
+
 
 const CompanyInfoCard = ({ orgId }: { orgId: string }) => {
   const [corpInfo, setCorpInfo] = useState<CorporationInfo>();
@@ -34,7 +39,8 @@ const CompanyInfoCard = ({ orgId }: { orgId: string }) => {
         const corpId = await financeApi.get(
           `/company?&corp_code=${data?.corpCode}`
         );
-        console.log("🔥 기업 아이디:", corpId.data);
+        console.log("corpId", corpId.data);
+
         setCorpInfo(corpId.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -69,6 +75,7 @@ const CompanyInfoCard = ({ orgId }: { orgId: string }) => {
 
   return (
     <Flex direction={{ base: "column", md: "column" }} gap={8}>
+
       {/* Company Information Card */}
       <Box {...CARD_STYLES} p={0} w={{ base: "100%", md: "100%" }}>
         <Box p={6}>
@@ -114,6 +121,7 @@ const CompanyInfoCard = ({ orgId }: { orgId: string }) => {
               value={corpInfo?.fax_no}
               isLoading={loading}
             />
+
             <InfoItem
               label="홈페이지"
               value={corpInfo?.hm_url}
@@ -137,6 +145,13 @@ const CompanyInfoCard = ({ orgId }: { orgId: string }) => {
 
       <Flex direction={{ base: "column", md: "row" }} gap={8}>
         {/* 주가 차트 */}
+
+        <Box {...CARD_STYLES} p={6} w={{ base: "100%", md: "50%" }}>
+          <Text {...HEADING_STYLES}>주가 차트</Text>
+          <Separator mt={2} mb={4} />
+          <Box>
+            <RealTimeChart corpStockCode={corpInfo?.stock_code || ""} />
+
         <Box {...CARD_STYLES} w={{ base: "100%", md: "50%" }}>
           <Box bg="teal.50" p={4} borderBottom="1px" borderColor="teal.100">
             <Text {...HEADING_STYLES}>
@@ -161,6 +176,7 @@ const CompanyInfoCard = ({ orgId }: { orgId: string }) => {
                 주가 차트 데이터가 준비 중입니다
               </Text>
             )}
+
           </Box>
         </Box>
 

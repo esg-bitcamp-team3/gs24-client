@@ -2,9 +2,11 @@ import { handleApiError } from "../util/handleApiError";
 import { apiClient } from "./apiclient";
 import { CompanyInfo, InterestCompanyInfo } from "./interfaces/companyinfo";
 import {
+  Category,
+  CategoryCorporation,
   Corporation,
   CorporationsWithInterestPage,
-  interestCorporation,
+  InterestCorporation,
 } from "./interfaces/corporation";
 
 import { EsgRatingResponse } from "./interfaces/esgRating";
@@ -124,7 +126,7 @@ export async function getCorporationInfo(id: string) {
 export const getCorporationsWithInterest = async (page: number) => {
   try {
     const res = await apiClient.get<CorporationsWithInterestPage>(
-      "/interestCorporation/corporations",
+      "/interest-corporations/corporations",
       { params: { page } }
     );
     return res.data;
@@ -136,9 +138,29 @@ export const getCorporationsWithInterest = async (page: number) => {
 
 export const getInterestCorporation = async (id: string) => {
   try {
-    const res = await apiClient.get<boolean>(`/interestCorporation/${id}`);
+    const res = await apiClient.get<boolean>(`/interest-corporations/${id}`);
     return res.data;
   } catch (err) {
-    handleApiError(err, "관심기업 찾기 실패패");
+    handleApiError(err, "관심기업 찾기 실패");
+  }
+};
+
+export const getCategoryCorporation = async (id: string) => {
+  try {
+    const res = await apiClient.get<CategoryCorporation[]>(
+      `/interest-corporation-categories/category/${id}`
+    );
+    return res.data;
+  } catch (err) {
+    handleApiError(err, "카테고리별 기업 찾기 실패");
+  }
+};
+
+export const getCategory = async () => {
+  try {
+    const res = await apiClient.get<Category[]>(`categories/my`);
+    return res.data;
+  } catch (err) {
+    handleApiError(err, "카테고리 찾기 실패");
   }
 };

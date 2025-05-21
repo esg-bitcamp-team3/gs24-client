@@ -35,9 +35,26 @@ export interface CorporationsWithInterestPage {
   hasMore: boolean;
 }
 
-export interface interestCorporation {
+export interface InterestCorporation {
   id: string;
   userId: string;
   corporationId: string;
   checkTime: string;
+}
+
+export interface InterestCorporationDetail {
+  id: string;
+  userId: string;
+  corporation: Corporation;
+}
+
+export interface Category {
+  id: string;
+  name: string;
+}
+
+export interface CategoryCorporation {
+  id: string;
+  interestCorporationDetailDTO: InterestCorporationDetail;
+  categoryDTO: Category;
 }

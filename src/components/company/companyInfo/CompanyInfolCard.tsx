@@ -26,6 +26,7 @@ import RealTimeChart from "./RealTimeChart";
 
 import { FaChartLine, FaNewspaper } from "react-icons/fa";
 import KeywordNews from "../keywordTrend/KeywordNews";
+import { InfoItemDart } from "@/components/etcs/InfoItemDart";
 
 const CompanyInfoCard = ({ orgId }: { orgId: string }) => {
   const [corpInfo, setCorpInfo] = useState<CorporationInfo>();
@@ -137,7 +138,7 @@ const CompanyInfoCard = ({ orgId }: { orgId: string }) => {
               isLoading={loading}
               gridColumn={{ md: "1 / 2" }}
             />
-            <InfoItem
+            <InfoItemDart
               label="재무재표"
               value={<OpenDart corpCode={corpInfo?.corp_code || ""} />}
               isLoading={loading}
@@ -155,21 +156,8 @@ const CompanyInfoCard = ({ orgId }: { orgId: string }) => {
               주가 차트
             </Text>
           </Box>
-          <Box
-            p={6}
-            minH="300px"
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-          >
-            {loading ? (
-              <Flex direction="column" w="100%" gap={4}>
-                <Skeleton height="200px" w="100%" />
-                <Skeleton height="20px" w="80%" />
-              </Flex>
-            ) : (
-              <RealTimeChart corpStockCode={corpInfo?.stock_code || ""} />
-            )}
+          <Box p={6} minH="300px" alignItems="center" justifyContent="center">
+            <RealTimeChart corpStockCode={corpInfo?.stock_code || ""} />
           </Box>
         </Box>
 

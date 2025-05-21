@@ -49,14 +49,12 @@ const EmotionCard = ({ orgname }: Props) => {
       <Flex
         p={5}
         mt={6}
-        borderRadius="lg"
-        boxShadow="md"
-        borderWidth="1px"
         justifyContent="center"
         alignItems="center"
         minHeight="120px"
         flexDir="column"
         gap={3}
+        h={"100%"}
       >
         <Spinner size="lg" color="blue.500" borderWidth={"4px"} />
         <Text fontSize="sm" color="gray.500">

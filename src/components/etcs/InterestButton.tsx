@@ -145,10 +145,10 @@ const InterestButton = ({ orgId }: InterestButtonProps) => {
                 boxShadow: "0 10px 30px rgba(0, 0, 0, 0.2)",
                 padding: "24px",
                 width: "100%",
-                maxWidth: "500px",
+                maxWidth: "300px",
               }}
             >
-              <Dialog.Header>
+              <Dialog.Header justifyContent={"space-between"}>
                 <Dialog.Title
                   style={{
                     fontSize: "20px",
@@ -158,21 +158,19 @@ const InterestButton = ({ orgId }: InterestButtonProps) => {
                 >
                   관심 기업 등록
                 </Dialog.Title>
+                <CategoryDialog />
               </Dialog.Header>
 
               <Dialog.Body>
                 <Box
                   style={{
-                    minHeight: "300px",
+                    minHeight: "auto",
                     display: "flex",
                     flexDirection: "column",
-                    alignItems: "center",
-                    gap: "16px",
-                    marginTop: "16px",
+                    gap: "12px",
+                    marginTop: "12px",
                   }}
                 >
-                  <CategoryDialog />
-
                   <form onSubmit={handleSubmit(onSubmit)}>
                     <Fieldset.Root invalid={!!errors.category}>
                       <Controller
@@ -192,9 +190,10 @@ const InterestButton = ({ orgId }: InterestButtonProps) => {
                                   value={category.id}
                                 >
                                   <Box
+                                    justifyContent="space-between"
+                                    w={"100%"}
                                     style={{
                                       display: "flex",
-                                      justifyContent: "space-between",
                                       alignItems: "center",
                                       backgroundColor: "#f5f5f5",
                                       borderRadius: "8px",

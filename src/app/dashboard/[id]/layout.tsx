@@ -56,16 +56,15 @@ export default function Layout({ children }: LayoutProps) {
         overflow={"auto"}
         maxW={"full"}
         maxH="full"
-        bg={"#f7f7f7"}
       >
         <Box {...CARD_STYLES} p={0} w={{ base: "100%", md: "100%" }}>
           <Box bg="blue.50" p={4} borderBottom="1px" borderColor="blue.100">
             <Flex align="center" gap={3}>
               <Icon as={FaBuilding} boxSize={6} color="blue.500" />
-              <Text fontSize="2xl" fontWeight="bold" color="gray.700">
+              <Text fontSize="2xl" fontWeight="bold" >
                 {companyinfo?.corp_name}
               </Text>
-              {companyinfo?.stock_name && (
+              {/* {companyinfo?.stock_name && (
                 <Badge
                   colorScheme="blue"
                   fontSize="sm"
@@ -75,7 +74,7 @@ export default function Layout({ children }: LayoutProps) {
                 >
                   {companyinfo.stock_name}
                 </Badge>
-              )}
+              )} */}
               {id && <InterestButton orgId={id} />}
             </Flex>
           </Box>

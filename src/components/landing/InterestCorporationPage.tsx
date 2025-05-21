@@ -15,13 +15,13 @@ import {
 } from "@chakra-ui/react";
 import { MdBookmark, MdFolderSpecial, MdNotifications } from "react-icons/md";
 import { LuArrowRight } from "react-icons/lu";
+import {useRouter} from 'next/navigation'
 
 const InterestCorporationPage = () => {
-  const scrollToTop = () => {
-    document
-      .getElementById("first-landing")
-      ?.scrollIntoView({ behavior: "smooth" });
-  };
+  const router = useRouter()
+  const handleLogin = () => {
+    router.push("/login")
+  }
 
   return (
     <Box
@@ -127,7 +127,7 @@ const InterestCorporationPage = () => {
       </SimpleGrid>
       <Box textAlign="center" mt={16}>
         <Button
-          onClick={scrollToTop}
+          onClick={handleLogin}
           size="lg"
           px={10}
           py={7}
@@ -166,7 +166,7 @@ const InterestCorporationPage = () => {
             transform: "translateX(-100%)",
           }}
         >
-          지금 시작하기
+          로그인 해버리기
           <LuArrowRight />
         </Button>
       </Box>

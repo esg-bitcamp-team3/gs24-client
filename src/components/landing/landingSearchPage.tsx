@@ -45,12 +45,31 @@ const LandingSearchPage = () => {
 
   const safeSearchTerm = (searchTerm || "").trim().toLowerCase();
 
+  // const filteredCompanies =
+  //   safeSearchTerm === ""
+  //     ? []
+  //     : companyList.filter((company) => company.corpName);
+  // const filteredCompanies =
+  //   searchTerm.trim() === ""
+  //     ? []
+  //     : companyList.filter((company) =>
+  //         company.corpName
+  //           .trim()
+  //           .toLowerCase()
+  //           .includes(searchTerm.trim().toLowerCase())
+  //       );
   const filteredCompanies =
-    safeSearchTerm === ""
+    searchTerm.trim() === ""
       ? []
-      : companyList.filter((company) => {
-          company.corpName;
-        });
+      : companyList.filter(
+          (company) =>
+            company.corpName &&
+            typeof company.corpName === "string" &&
+            company.corpName
+              .trim()
+              .toLowerCase()
+              .includes(searchTerm.trim().toLowerCase())
+        );
 
   const loadCompanies = async () => {
     try {

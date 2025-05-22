@@ -40,14 +40,26 @@ const AddCorp = ({ label, id, onSaved }: SearchOrgProps) => {
   const [companyList, setCompanyList] = useState<Corporation[]>([]);
   const [interestList, setInterestList] = useState<string[]>([]);
 
+  // const filteredCompanies =
+  //   searchTerm === ""
+  //     ? companyList
+  //     : companyList.filter((company) =>
+  //         company.corpName
+  //           .trim()
+  //           .toLowerCase()
+  //           .includes(searchTerm.trim().toLowerCase())
+  //       );
   const filteredCompanies =
-    searchTerm === ""
-      ? companyList
-      : companyList.filter((company) =>
-          company.corpName
-            .trim()
-            .toLowerCase()
-            .includes(searchTerm.trim().toLowerCase())
+    searchTerm.trim() === ""
+      ? []
+      : companyList.filter(
+          (company) =>
+            company.corpName &&
+            typeof company.corpName === "string" &&
+            company.corpName
+              .trim()
+              .toLowerCase()
+              .includes(searchTerm.trim().toLowerCase())
         );
 
   const loadCompanies = async () => {

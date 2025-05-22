@@ -30,13 +30,16 @@ const Searching = () => {
   };
 
   const filteredCompanies =
-    searchTerm === ""
-      ? companyList
-      : companyList.filter((company) =>
-          company.corpName
-            .trim()
-            .toLowerCase()
-            .includes(searchTerm.trim().toLowerCase())
+    searchTerm.trim() === ""
+      ? []
+      : companyList.filter(
+          (company) =>
+            company.corpName &&
+            typeof company.corpName === "string" &&
+            company.corpName
+              .trim()
+              .toLowerCase()
+              .includes(searchTerm.trim().toLowerCase())
         );
 
   const loadCompanies = async () => {
@@ -57,43 +60,43 @@ const Searching = () => {
   }, [isDropdownOpen]);
 
   // 가상화를 위한 row
- const Row = ({ index, style, data }: rowProps) => {
-  const company = data[index];
-  return (
-    <Box
-      style={style}
-      key={company.corporation.id}
-      display="flex"
-      w="100%"
-      px={2}
-      justifyContent="space-between"
-      alignItems="center"
-    >
-      <Button
-        variant="ghost"
-        color="gray.700"
-        justifyContent="flex-start"
-        onClick={() => handleCompanyClick(company.corporation.id)}
+  const Row = ({ index, style, data }: rowProps) => {
+    const company = data[index];
+    return (
+      <Box
+        style={style}
+        key={company.corporation.id}
+        display="flex"
         w="100%"
-        h="40px"
-        _hover={{
-          bg: "blue.50",
-          color: "blue.600"
-        }}
-        fontSize="sm"
-        fontWeight="medium"
-        transition="all 0.2s"
+        px={2}
+        justifyContent="space-between"
+        alignItems="center"
       >
-        {company.corporation.corpName}
-      </Button>
-    </Box>
-  );
-};
+        <Button
+          variant="ghost"
+          color="gray.700"
+          justifyContent="flex-start"
+          onClick={() => handleCompanyClick(company.corporation.id)}
+          w="100%"
+          h="40px"
+          _hover={{
+            bg: "blue.50",
+            color: "blue.600",
+          }}
+          fontSize="sm"
+          fontWeight="medium"
+          transition="all 0.2s"
+        >
+          {company.corporation.corpName}
+        </Button>
+      </Box>
+    );
+  };
   return (
     <Box position="relative" width="100%" ref={ref}>
       <Input
-        placeholder='검색'
-        pl='2'
+        placeholder="검색"
+        pl="2"
         value={searchTerm}
         onClick={() => setIsDropdownOpen(true)}
         onChange={(e) => setSearchTerm((e.target as HTMLInputElement).value)}

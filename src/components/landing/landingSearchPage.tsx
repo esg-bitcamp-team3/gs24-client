@@ -45,10 +45,10 @@ const LandingSearchPage = () => {
 
   const safeSearchTerm = (searchTerm || "").trim().toLowerCase();
 
-  const filteredCompanies =
-    safeSearchTerm === ""
-      ? []
-      : companyList.filter((company) => company.corpName);
+  // const filteredCompanies =
+  //   safeSearchTerm === ""
+  //     ? []
+  //     : companyList.filter((company) => company.corpName);
   // const filteredCompanies =
   //   searchTerm.trim() === ""
   //     ? []
@@ -58,6 +58,18 @@ const LandingSearchPage = () => {
   //           .toLowerCase()
   //           .includes(searchTerm.trim().toLowerCase())
   //       );
+  const filteredCompanies =
+    searchTerm.trim() === ""
+      ? []
+      : companyList.filter(
+          (company) =>
+            company.corpName &&
+            typeof company.corpName === "string" &&
+            company.corpName
+              .trim()
+              .toLowerCase()
+              .includes(searchTerm.trim().toLowerCase())
+        );
 
   const loadCompanies = async () => {
     try {

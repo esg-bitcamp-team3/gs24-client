@@ -254,8 +254,32 @@ const InterestButton = ({ orgId }: InterestButtonProps) => {
                         marginTop: "24px",
                       }}
                     >
-                      <Button type="submit">등록</Button>
-                      <Button type="button" onClick={() => setIsOpen(false)}>
+                      <Button
+                        type="submit"
+                        style={{
+                          padding: "10px 16px",
+                          backgroundColor: "black",
+                          color: "white",
+                          border: "none",
+                          borderRadius: "6px",
+                          cursor: "pointer",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        등록
+                      </Button>
+                      <Button
+                        type="button"
+                        style={{
+                          padding: "10px 16px",
+                          backgroundColor: "black",
+                          color: "white",
+                          border: "none",
+                          borderRadius: "6px",
+                          cursor: "pointer",
+                        }}
+                        onClick={() => setIsOpen(false)}
+                      >
                         취소
                       </Button>
                     </Dialog.Footer>

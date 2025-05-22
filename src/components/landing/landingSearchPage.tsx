@@ -48,16 +48,9 @@ const LandingSearchPage = () => {
   const filteredCompanies =
     safeSearchTerm === ""
       ? []
-      : companyList.filter((company) => company.corpName);
-  // const filteredCompanies =
-  //   searchTerm.trim() === ""
-  //     ? []
-  //     : companyList.filter((company) =>
-  //         company.corpName
-  //           .trim()
-  //           .toLowerCase()
-  //           .includes(searchTerm.trim().toLowerCase())
-  //       );
+      : companyList.filter((company) => {
+          company.corpName;
+        });
 
   const loadCompanies = async () => {
     try {
@@ -71,7 +64,7 @@ const LandingSearchPage = () => {
     if (companyList.length === 0) {
       loadCompanies();
     }
-    console.log("searchTerm:", searchTerm);
+    // console.log("searchTerm:", searchTerm);
   }, [isDropdownOpen, searchTerm]);
 
   const Row = ({ index, style, data }: rowProps) => {

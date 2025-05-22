@@ -50,8 +50,8 @@ const CategoryDialog = () => {
                 }}
                 style={{
                   padding: "10px 16px",
-                  backgroundColor: "#007bff",
-                  color: "#fff",
+                  backgroundColor: "black",
+                  color: "white",
                   border: "none",
                   borderRadius: "6px",
                   cursor: "pointer",
@@ -64,8 +64,8 @@ const CategoryDialog = () => {
                 onClick={() => setIsOpen(false)}
                 style={{
                   padding: "10px 16px",
-                  backgroundColor: "#f0f0f0",
-                  color: "#555",
+                  backgroundColor: "black",
+                  color: "white",
                   border: "none",
                   borderRadius: "6px",
                   cursor: "pointer",

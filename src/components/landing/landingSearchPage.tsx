@@ -43,24 +43,9 @@ const LandingSearchPage = () => {
     }, 200);
   };
 
-  const safeSearchTerm = (searchTerm || "").trim().toLowerCase();
-
-  // const filteredCompanies =
-  //   safeSearchTerm === ""
-  //     ? []
-  //     : companyList.filter((company) => company.corpName);
-  // const filteredCompanies =
-  //   searchTerm.trim() === ""
-  //     ? []
-  //     : companyList.filter((company) =>
-  //         company.corpName
-  //           .trim()
-  //           .toLowerCase()
-  //           .includes(searchTerm.trim().toLowerCase())
-  //       );
   const filteredCompanies =
     searchTerm.trim() === ""
-      ? []
+      ? companyList
       : companyList.filter(
           (company) =>
             company.corpName &&
@@ -83,7 +68,6 @@ const LandingSearchPage = () => {
     if (companyList.length === 0) {
       loadCompanies();
     }
-    console.log("searchTerm:", searchTerm);
   }, [isDropdownOpen, searchTerm]);
 
   const Row = ({ index, style, data }: rowProps) => {
@@ -157,15 +141,10 @@ const LandingSearchPage = () => {
                 setIsInputFocused(false);
               }}
               value={searchTerm}
-              // onChange={(e) => {
-              //   const newValue = e.target.value;
-              //   setSearchTerm(newValue);
-              //   // 검색어가 있을 때만 드롭다운 열기
-              //   setIsDropdownOpen(newValue.trim() !== "");
-              // }}
               onChange={(e) => {
-                const newValue = e.target.value || "";
+                const newValue = e.target.value;
                 setSearchTerm(newValue);
+                // 검색어가 있을 때만 드롭다운 열기
                 setIsDropdownOpen(newValue.trim() !== "");
               }}
             />

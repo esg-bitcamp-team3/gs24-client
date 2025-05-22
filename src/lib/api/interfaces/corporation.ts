@@ -22,7 +22,6 @@ export interface Corporation {
   id: string;
   corpCode: string;
   corpName: string;
-  corpEngName: string;
   stockCode: string;
 }
 

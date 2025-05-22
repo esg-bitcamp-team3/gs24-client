@@ -34,13 +34,6 @@ interface SectionProps {
   id?: string;
 }
 
-import { useRef } from "react";
-import KeyWordTrendPage from "@/components/landing/KeyWordTrendPage";
-import SentimentPage from "@/components/landing/SentimentPage";
-import InterestCorporationPage from "@/components/landing/InterestCorporationPage";
-import { useRouter } from "next/navigation";
-import UserIcon from "@/components/etcs/userIcon";
-
 // 개별 섹션 구성 함수
 function FullSection({ children, id }: SectionProps) {
   const { ref, inView } = useInView({

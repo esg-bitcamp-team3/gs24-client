@@ -14,7 +14,7 @@ export const apiClient = axios.create({
 export const crawlApi = axios.create({
   baseURL: "http://localhost/crawl/crawl",
   // withCredentials: true,
-  timeout: 5000,
+  timeout: 500000,
   headers: {
     "Content-Type": "application/json",
   },
@@ -23,7 +23,7 @@ export const crawlApi = axios.create({
 export const financeApi = axios.create({
   baseURL: "http://localhost/finance/finance",
   // withCredentials: true,
-  timeout: 5000,
+  timeout: 10000,
   headers: {
     "Content-Type": "application/json",
   },

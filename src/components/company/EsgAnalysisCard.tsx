@@ -16,6 +16,7 @@ import React, { useEffect, useState } from "react";
 import { EsgLineData } from "@/components/chartDataImport";
 import { EsgBarData } from "../barChart";
 import { FaClipboardList } from "react-icons/fa";
+import EsgPredict from "./ESGPredict";
 
 const EsgAnalysisCard = ({ orgId }: { orgId: string }) => {
   // 스타일 상수
@@ -204,40 +205,7 @@ const EsgAnalysisCard = ({ orgId }: { orgId: string }) => {
               </Text>
             </Box>
 
-            {/* Mini legend */}
-            <Box mt={4} p={2} bg="gray.50" borderRadius="md" w="90%">
-              <Flex
-                justifyContent="space-between"
-                fontSize="xs"
-                color="gray.500"
-              >
-                <Text>D</Text>
-                <Text>C</Text>
-                <Text>B</Text>
-                <Text>B+</Text>
-                <Text>A</Text>
-                <Text fontWeight="bold" color="blue.500">
-                  A+
-                </Text>
-              </Flex>
-              <Box
-                w="100%"
-                h="4px"
-                bg="gray.200"
-                borderRadius="full"
-                mt={1}
-                position="relative"
-              >
-                <Box
-                  position="absolute"
-                  right="0"
-                  w="16.6%"
-                  h="100%"
-                  bg="blue.500"
-                  borderRadius="full"
-                />
-              </Box>
-            </Box>
+            <EsgPredict orgId={orgId} />
           </Flex>
         </Box>
       </Flex>

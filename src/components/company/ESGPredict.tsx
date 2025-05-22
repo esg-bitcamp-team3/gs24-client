@@ -57,7 +57,7 @@ const EsgPredict = ({ orgId }: { orgId: string }) => {
   const fetchESGPrediction = async () => {
     try {
       const response = await crawlApi.get<EsgData>(
-        `/predict?${encodeURIComponent(companyName)}`
+        `/predict?company_name=${encodeURIComponent(companyName)}`
       );
       setEsgData(
         response.data || {
@@ -178,9 +178,8 @@ const EsgPredict = ({ orgId }: { orgId: string }) => {
   };
 
   return (
-    <Box {...CARD_STYLES} p={6} w={{ base: "100%", md: "30%" }}>
+    <Flex mt={8} direction="column" gap={8} overflow={"auto"}>
       <Flex justify="space-between" align="center" mb={4}>
-        <Text {...HEADING_STYLES}>ESG 예상 등급</Text>
         <IconButton
           onClick={fetchESGPrediction}
           size="sm"
@@ -325,7 +324,7 @@ const EsgPredict = ({ orgId }: { orgId: string }) => {
           <Text fontWeight="bold">{getGrade(esgData.g_score)}</Text>
         </Flex>
       </Box>
-    </Box>
+    </Flex>
   );
 };
 

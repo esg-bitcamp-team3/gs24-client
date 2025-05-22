@@ -157,56 +157,8 @@ const EsgAnalysisCard = ({ orgId }: { orgId: string }) => {
           <Text {...HEADING_STYLES} textAlign={"center"}>
             ESG 예상 등급
           </Text>
-          <Flex
-            direction="column"
-            align="center"
-            justify="center"
-            h="200px"
-            mt={16}
-          >
-            <Box position="relative">
-              {/* Outer ring with gradient */}
-              <Box
-                w="140px"
-                h="140px"
-                borderRadius="full"
-                background="linear-gradient(135deg, #4299E1 0%, #3182CE 100%)"
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                boxShadow="0 4px 20px rgba(66, 153, 225, 0.3)"
-              >
-                {/* Inner circle with grade */}
-                <Box
-                  w="120px"
-                  h="120px"
-                  borderRadius="full"
-                  bg="white"
-                  display="flex"
-                  flexDirection="column"
-                  alignItems="center"
-                  justifyContent="center"
-                >
-                  <Text
-                    fontSize="4xl"
-                    fontWeight="bold"
-                    color="blue.500"
-                    letterSpacing="-1px"
-                  >
-                    A+
-                  </Text>
-                </Box>
-              </Box>
-            </Box>
 
-            <Box mt={6} textAlign="center">
-              <Text color="gray.600" fontSize="sm">
-                예상 등급 (2025년 5월)
-              </Text>
-            </Box>
-
-            <EsgPredict orgId={orgId} />
-          </Flex>
+          <EsgPredict orgId={orgId} />
         </Box>
       </Flex>
     </Flex>

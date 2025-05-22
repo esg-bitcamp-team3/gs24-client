@@ -14,6 +14,7 @@ import { Corporation } from "@/lib/api/interfaces/corporation";
 import { FixedSizeList as List } from "react-window";
 import { useClickAway } from "react-use";
 import { FaArrowRight, FaSearch } from "react-icons/fa";
+import LandingNav from "../navbar/landingNav";
 
 interface rowProps {
   index: number;
@@ -100,6 +101,7 @@ const LandingSearchPage = () => {
 
   return (
     <Flex direction="column" width="full" align="center" justify="center">
+      <LandingNav />
       <Box textAlign="center" mb="10">
         <Heading as="h1" size="6xl" fontWeight="bold">
           ESG 등급 분석의 시작

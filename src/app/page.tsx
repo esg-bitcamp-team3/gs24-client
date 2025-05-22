@@ -179,31 +179,65 @@ export default function Home() {
       overflowY="scroll"
       scrollSnapType="y mandatory"
       css={{
-      "&::-webkit-scrollbar": { display: "none" },
-      scrollBehavior: "smooth",
+        "&::-webkit-scrollbar": { display: "none" },
+        scrollBehavior: "smooth",
       }}
     >
+      {/* <UserIcon /> */}
+      {/* 페이지 인디케이터 */}
+      <Flex
+        direction="column"
+        position="fixed"
+        top="50%"
+        right="40px"
+        transform="translateY(-50%)"
+        zIndex="overlay"
+        gap={3}
+      >
+        {[
+          "first-landing",
+          "second-landing",
+          "third-landing",
+          "fourth-landing",
+        ].map((sectionId, idx) => (
+          <Box
+            key={idx}
+            w="10px"
+            h="10px"
+            borderRadius="full"
+            bg="gray.400"
+            _hover={{ bg: "gray.600" }}
+            cursor="pointer"
+            transition="background-color 0.6s"
+            onClick={() =>
+              document
+                .getElementById(sectionId)
+                ?.scrollIntoView({ behavior: "smooth" })
+            }
+          />
+        ))}
+      </Flex>
       <FullSection id="search-landing">
-      <LandingSearchPage />
+        <LandingSearchPage />
       </FullSection>
       {/* 1️⃣ Hero Section ================================ */}
       <FullSection id="first-landing">
-      <ESGRatingPage />
+        <ESGRatingPage />
       </FullSection>
 
       {/* 2️⃣ ESG 데이터 분석 (대시보드 형태) ============================ */}
       <FullSection id="second-landing">
-      <KeyWordTrendPage />
+        <KeyWordTrendPage />
       </FullSection>
 
       {/* 3️⃣ 점수예측 ============================ */}
       <FullSection id="third-landing">
-      <SentimentPage />
+        <SentimentPage />
       </FullSection>
 
       {/* 4️⃣ 키워드 ============================ */}
       <FullSection id="fourth-landing">
-      <InterestCorporationPage />
+        <InterestCorporationPage />
       </FullSection>
     </Box>
   );

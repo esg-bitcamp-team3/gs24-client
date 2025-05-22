@@ -60,7 +60,6 @@ const AddCorp = ({ label, id, onSaved }: SearchOrgProps) => {
   };
   useEffect(() => {
     loadCompanies();
-    setSearchTerm("");
   }, [companyList]);
 
   const Row = ({ index, style, data }: rowProps) => {
@@ -72,16 +71,14 @@ const AddCorp = ({ label, id, onSaved }: SearchOrgProps) => {
           px={3}
           py={2}
           bg={
-            interestList.includes(company.corporation.id) ? "green.50" : "white"
+            interestList.includes(company.corporation.id) ? "gray.300" : "white"
           }
-          borderRadius="lg"
-          _hover={{ bg: "green.50" }}
+          // borderRadius="lg"
+          _hover={{ bg: "gray.300" }}
           transition="background 0.2s"
           justifyContent="space-between"
         >
-          <Text fontWeight="medium" color="green.800">
-            {company.corporation.corpName}
-          </Text>
+          <Text fontWeight="medium">{company.corporation.corpName}</Text>
           <AddButton
             orgId={company.corporation.id}
             interestList={interestList}
@@ -104,7 +101,6 @@ const AddCorp = ({ label, id, onSaved }: SearchOrgProps) => {
         <Button
           variant="solid"
           size="md"
-          colorScheme="green"
           borderRadius="full"
           px={6}
           py={2}
@@ -133,8 +129,6 @@ const AddCorp = ({ label, id, onSaved }: SearchOrgProps) => {
                 placeholder="기업명 검색"
                 value={searchTerm}
                 borderRadius="full"
-                bg="gray.50"
-                borderColor="green.200"
                 onChange={(e) =>
                   setSearchTerm((e.target as HTMLInputElement).value)
                 }

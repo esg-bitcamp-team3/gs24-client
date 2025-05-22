@@ -8,7 +8,6 @@ import {
   SimpleGrid,
 } from "@chakra-ui/react";
 import { MdBookmark, MdFolderSpecial, MdNotifications } from "react-icons/md";
-import { LuArrowRight } from "react-icons/lu";
 import {useRouter} from 'next/navigation'
 
 const InterestCorporationPage = () => {

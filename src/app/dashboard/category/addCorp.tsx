@@ -31,7 +31,7 @@ interface SearchOrgProps {
 interface rowProps {
   index: number;
   style: React.CSSProperties;
-  data: CorpWithInterest[];
+  data: Corporation[];
 }
 
 const AddCorp = ({ label, id, onSaved }: SearchOrgProps) => {
@@ -40,18 +40,9 @@ const AddCorp = ({ label, id, onSaved }: SearchOrgProps) => {
   const [companyList, setCompanyList] = useState<Corporation[]>([]);
   const [interestList, setInterestList] = useState<string[]>([]);
 
-  // const filteredCompanies =
-  //   searchTerm === ""
-  //     ? companyList
-  //     : companyList.filter((company) =>
-  //         company.corpName
-  //           .trim()
-  //           .toLowerCase()
-  //           .includes(searchTerm.trim().toLowerCase())
-  //       );
   const filteredCompanies =
     searchTerm.trim() === ""
-      ? []
+      ? companyList
       : companyList.filter(
           (company) =>
             company.corpName &&
@@ -77,25 +68,22 @@ const AddCorp = ({ label, id, onSaved }: SearchOrgProps) => {
   const Row = ({ index, style, data }: rowProps) => {
     const company = data[index];
     return (
-      <Box key={company.corporation.corpCode} style={style}>
+      <Box key={company.corpCode} style={style}>
         <HStack
           w="100%"
           px={3}
           py={2}
-          bg={
-            interestList.includes(company.corporation.id) ? "gray.300" : "white"
-          }
-          // borderRadius="lg"
+          bg={interestList.includes(company.id) ? "gray.300" : "white"}
           _hover={{ bg: "gray.300" }}
           transition="background 0.2s"
           justifyContent="space-between"
         >
-          <Text fontWeight="medium">{company.corporation.corpName}</Text>
+          <Text fontWeight="medium">{company.corpName}</Text>
           <AddButton
-            orgId={company.corporation.id}
+            orgId={company.id}
             interestList={interestList}
             setInterestList={setInterestList}
-            checked={interestList.includes(company.corporation.id)} // 추가
+            checked={interestList.includes(company.id)} // 추가
           />
         </HStack>
       </Box>
@@ -133,6 +121,7 @@ const AddCorp = ({ label, id, onSaved }: SearchOrgProps) => {
             boxShadow="2xl"
             minW="350px"
             maxW="400px"
+            minH="500px"
           >
             <Dialog.Header>
               <Input
@@ -167,10 +156,7 @@ const AddCorp = ({ label, id, onSaved }: SearchOrgProps) => {
                     itemCount={filteredCompanies.length}
                     itemSize={50}
                     width="100%"
-                    itemData={filteredCompanies.map((company) => ({
-                      corporation: company,
-                      interested: false,
-                    }))}
+                    itemData={filteredCompanies}
                   >
                     {Row}
                   </List>

@@ -3,17 +3,14 @@ import { getCorporationList } from "@/lib/api/get";
 import { Box, Button, Input, Text } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
-import {
-  Corporation,
-  CorpWithInterest,
-} from "@/lib/api/interfaces/corporation";
+import { Corporation } from "@/lib/api/interfaces/corporation";
 import { FixedSizeList as List } from "react-window";
 import { useClickAway } from "react-use";
 
 interface rowProps {
   index: number;
   style: React.CSSProperties;
-  data: CorpWithInterest[];
+  data: Corporation[];
 }
 
 const Searching = () => {
@@ -31,7 +28,7 @@ const Searching = () => {
 
   const filteredCompanies =
     searchTerm.trim() === ""
-      ? []
+      ? companyList
       : companyList.filter(
           (company) =>
             company.corpName &&
@@ -65,7 +62,7 @@ const Searching = () => {
     return (
       <Box
         style={style}
-        key={company.corporation.id}
+        key={company.id}
         display="flex"
         w="100%"
         px={2}
@@ -76,7 +73,7 @@ const Searching = () => {
           variant="ghost"
           color="gray.700"
           justifyContent="flex-start"
-          onClick={() => handleCompanyClick(company.corporation.id)}
+          onClick={() => handleCompanyClick(company.id)}
           w="100%"
           h="40px"
           _hover={{
@@ -87,7 +84,7 @@ const Searching = () => {
           fontWeight="medium"
           transition="all 0.2s"
         >
-          {company.corporation.corpName}
+          {company.corpName}
         </Button>
       </Box>
     );
@@ -122,10 +119,7 @@ const Searching = () => {
               itemCount={filteredCompanies.length}
               itemSize={50}
               width="100%"
-              itemData={filteredCompanies.map((company) => ({
-                corporation: company,
-                interested: false,
-              }))}
+              itemData={filteredCompanies}
             >
               {Row}
             </List>

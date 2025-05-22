@@ -1,21 +1,16 @@
 "use client";
-import { getCorporationList, getCorporationsWithInterest } from "@/lib/api/get";
+import { getCorporationList } from "@/lib/api/get";
 import { Box, Button, Input, Text } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
-import InterestButton from "../etcs/InterestButton";
-import {
-  Corporation,
-  CorpWithInterest,
-} from "@/lib/api/interfaces/corporation";
+import { Corporation } from "@/lib/api/interfaces/corporation";
 import { FixedSizeList as List } from "react-window";
-import { checkLogin } from "@/lib/api/auth";
 import { useClickAway } from "react-use";
 
 interface rowProps {
   index: number;
   style: React.CSSProperties;
-  data: CorpWithInterest[];
+  data: Corporation[];
 }
 
 const Searching = () => {
@@ -32,13 +27,16 @@ const Searching = () => {
   };
 
   const filteredCompanies =
-    searchTerm === ""
+    searchTerm.trim() === ""
       ? companyList
-      : companyList.filter((company) =>
-          company.corpName
-            .trim()
-            .toLowerCase()
-            .includes(searchTerm.trim().toLowerCase())
+      : companyList.filter(
+          (company) =>
+            company.corpName &&
+            typeof company.corpName === "string" &&
+            company.corpName
+              .trim()
+              .toLowerCase()
+              .includes(searchTerm.trim().toLowerCase())
         );
 
   const loadCompanies = async () => {
@@ -64,20 +62,29 @@ const Searching = () => {
     return (
       <Box
         style={style}
-        key={company.corporation.id}
+        key={company.id}
         display="flex"
-        w="90%"
-        justifyContent={"space-between"}
+        w="100%"
+        px={2}
+        justifyContent="space-between"
+        alignItems="center"
       >
         <Button
-          paddingLeft={3}
           variant="ghost"
-          color="black"
+          color="gray.700"
           justifyContent="flex-start"
-          onClick={() => handleCompanyClick(company.corporation.id)}
-          w="90%"
+          onClick={() => handleCompanyClick(company.id)}
+          w="100%"
+          h="40px"
+          _hover={{
+            bg: "blue.50",
+            color: "blue.600",
+          }}
+          fontSize="sm"
+          fontWeight="medium"
+          transition="all 0.2s"
         >
-          {company.corporation.corpName}
+          {company.corpName}
         </Button>
       </Box>
     );
@@ -85,7 +92,8 @@ const Searching = () => {
   return (
     <Box position="relative" width="100%" ref={ref}>
       <Input
-        placeholder="search"
+        placeholder="검색"
+        pl="2"
         value={searchTerm}
         onClick={() => setIsDropdownOpen(true)}
         onChange={(e) => setSearchTerm((e.target as HTMLInputElement).value)}
@@ -111,10 +119,7 @@ const Searching = () => {
               itemCount={filteredCompanies.length}
               itemSize={50}
               width="100%"
-              itemData={filteredCompanies.map((company) => ({
-                corporation: company,
-                interested: false,
-              }))}
+              itemData={filteredCompanies}
             >
               {Row}
             </List>

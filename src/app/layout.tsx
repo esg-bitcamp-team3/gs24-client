@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Provider } from "@/components/ui/provider";
-import { Box, VStack } from "@chakra-ui/react";
+import { Box, ChakraProvider, VStack } from "@chakra-ui/react";
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
@@ -16,9 +16,9 @@ export default function RootLayout({
 }>) {
   return (
     <html>
-      <body style={{ height: "100vh", overflow: "hidden" }}>
+      <body style={{ minHeight: "100vh", overflow: "hidden" }}>
         <Provider>
-          <Box width="100%" height="full" bg={"#f7f7f7"}>
+          <Box width="100%" minHeight="full" bg={"#f7f7f7"}>
             {children}
             <Toaster />
           </Box>

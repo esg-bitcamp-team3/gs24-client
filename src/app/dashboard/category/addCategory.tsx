@@ -1,4 +1,3 @@
-import { postCategory } from "@/lib/api/post";
 import { Button, Dialog, Field, Input, Portal, Stack } from "@chakra-ui/react";
 import { useRef } from "react";
 import { useState } from "react";
@@ -47,18 +46,14 @@ export default function AddCategory({
               bg="white"
             >
               <Dialog.Header mb={2}>
-                <Dialog.Title
-                  fontSize="2xl"
-                  fontWeight="bold"
-                  color="green.700"
-                >
+                <Dialog.Title fontSize="2xl" fontWeight="bold">
                   새 카테고리 생성
                 </Dialog.Title>
               </Dialog.Header>
               <Dialog.Body pb="6">
                 <Stack gap="6">
                   <Field.Root>
-                    <Field.Label fontWeight="semibold" mb={2}>
+                    <Field.Label fontWeight="semibold" mb={2} color="gray.600">
                       카테고리 이름
                     </Field.Label>
                     <Input
@@ -68,11 +63,7 @@ export default function AddCategory({
                       onChange={(e) => setCategoryName(e.target.value)}
                       size="lg"
                       borderRadius="md"
-                      borderColor="green.400"
-                      _focus={{
-                        borderColor: "green.500",
-                        boxShadow: "0 0 0 2px rgb(45, 177, 159)",
-                      }}
+                      borderColor="black"
                     />
                   </Field.Root>
                 </Stack>
@@ -86,20 +77,26 @@ export default function AddCategory({
                 <Dialog.ActionTrigger asChild>
                   <Button
                     variant="ghost"
-                    colorScheme="gray"
                     size="md"
                     borderRadius="md"
+                    _hover={{
+                      bg: "gray.200",
+                    }}
                     onClick={handleClose}
                   >
                     취소
                   </Button>
                 </Dialog.ActionTrigger>
                 <Button
-                  colorScheme="teal"
                   variant="solid"
                   size="md"
                   borderRadius="md"
                   fontWeight="semibold"
+                  bg="white"
+                  color="black"
+                  _hover={{
+                    bg: "gray.200",
+                  }}
                   onClick={async () => {
                     if (!categoryName.trim()) {
                       alert("카테고리 이름을 입력하세요.");

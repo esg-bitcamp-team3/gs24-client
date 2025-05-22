@@ -170,7 +170,7 @@ const Ticker = () => {
     const isUp = parseFloat(carbonToday.compare) > 0;
 
     return (
-      <HStack justify="space-between" align="center" px={10}>
+      <HStack justify="flex-start" align="start" gap={2}>
         <HStack gap={4} align="start">
           <Text fontSize="md" fontWeight="semibold">
             {carbonToday.date.slice(5).replace(/-/g, ".")}.
@@ -182,7 +182,6 @@ const Ticker = () => {
         <Text fontWeight="bold">
           {Number(carbonToday.price).toLocaleString()}￦
         </Text>
-
         <Text color={isUp ? "red.500" : "blue.500"}>
           {Math.abs(Number(carbonToday.compare)).toFixed(2)} {isUp ? "▲" : "▼"}
         </Text>

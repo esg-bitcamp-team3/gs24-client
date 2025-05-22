@@ -5,35 +5,29 @@ import {
   Button,
   CloseButton,
   DataList,
-  Heading,
   HStack,
-  Slider,
   Tabs,
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { useCallback, useEffect, useState } from "react";
-import { LuPlus, LuSearch } from "react-icons/lu";
+import { useEffect, useState } from "react";
+
 import AddCategory from "./addCategory";
-import SearchOrg from "@/components/navbar/SearchOrg";
-import AddOrg from "./addOrg";
 import {
   Category,
   CategoryCorporation,
-  CorpWithInterest,
 } from "@/lib/api/interfaces/corporation";
-import {
-  getCategory,
-  getCategoryCorporation,
-  getCorporationsWithInterest,
-} from "@/lib/api/get";
+import { getCategory, getCategoryCorporation } from "@/lib/api/get";
 import { deleteCategory } from "@/lib/api/delete";
 import { postCategory } from "@/lib/api/post";
 import { useRouter } from "next/navigation";
+import AddCorp from "./addCorp";
+import useLoginCheck from "@/components/etcs/loginCheck";
 
 const TABS_PER_PAGE = 5;
 
 export default function Page() {
+  useLoginCheck();
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedTab, setSelectedTab] = useState<string | null>(null);
   const [companyList, setCompanyList] = useState<CategoryCorporation[]>([]);
@@ -132,8 +126,8 @@ export default function Page() {
                 py={2}
                 borderRadius="full"
                 fontWeight="bold"
-                _selected={{ bg: "green.100", color: "green.700" }}
-                _hover={{ bg: "gray.100" }}
+                _selected={{ bg: "gray.200", color: "black" }}
+                _hover={{ bg: "gray.200" }}
                 display="flex"
                 flexDirection="row"
                 alignItems="center"
@@ -212,7 +206,7 @@ export default function Page() {
                             py={2}
                           >
                             <DataList.ItemValue
-                              fontWeight="medium"
+                              fontWeight="bold"
                               cursor="pointer"
                               onClick={() =>
                                 handleCompanyClick(
@@ -221,10 +215,12 @@ export default function Page() {
                                 )
                               }
                             >
-                              {
-                                company?.interestCorporationDetailDTO
-                                  ?.corporation?.corpName
-                              }
+                              <Text _hover={{ color: "blue.500" }}>
+                                {
+                                  company?.interestCorporationDetailDTO
+                                    ?.corporation?.corpName
+                                }
+                              </Text>
                             </DataList.ItemValue>
                             {/* <CloseButton size="sm" onClick={() => {}} /> */}
                           </HStack>
@@ -234,7 +230,7 @@ export default function Page() {
                   )}
                 </Box>
                 <VStack gap={2} w="100%">
-                  <AddOrg
+                  <AddCorp
                     label="기업 추가하기"
                     id={item.id}
                     onSaved={() => {

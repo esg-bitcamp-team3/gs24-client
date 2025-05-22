@@ -10,22 +10,22 @@ import {
 } from "@chakra-ui/react";
 import { getCorporationList, getCorporationsWithInterest } from "@/lib/api/get";
 import { useRouter } from "next/navigation";
-import { CorpWithInterest } from "@/lib/api/interfaces/corporation";
+import { Corporation } from "@/lib/api/interfaces/corporation";
 import { FixedSizeList as List } from "react-window";
-import { checkLogin } from "@/lib/api/auth";
 import { useClickAway } from "react-use";
 import { FaArrowRight, FaSearch } from "react-icons/fa";
+import LandingNav from "../navbar/landingNav";
 
 interface rowProps {
   index: number;
   style: React.CSSProperties;
-  data: CorpWithInterest[];
+  data: Corporation[];
 }
 
 const LandingSearchPage = () => {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
-  const [companyList, setCompanyList] = useState<CorpWithInterest[]>([]);
+  const [companyList, setCompanyList] = useState<Corporation[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isInputFocused, setIsInputFocused] = useState(false);
   const ref = useRef(null);
@@ -34,41 +34,32 @@ const LandingSearchPage = () => {
   });
 
   const handleCompanyClick = (companyId: string, companyName: string) => {
-    setSearchTerm(companyName); // 선택한 회사 이름을 검색창에 설정
+    setSearchTerm(companyName || ""); // 선택한 회사 이름을 검색창에 설정
     setIsDropdownOpen(false);
 
     // 300ms 후에 페이지 이동 (검색어가 표시되는 것을 볼 수 있도록)
     setTimeout(() => {
       router.push(`/dashboard/${companyId}/companyInfo`);
-    }, 300);
+    }, 200);
   };
 
   const filteredCompanies =
     searchTerm.trim() === ""
-      ? []
-      : companyList.filter((company) =>
-          company.corporation.corpName
-            .trim()
-            .toLowerCase()
-            .includes(searchTerm.trim().toLowerCase())
+      ? companyList
+      : companyList.filter(
+          (company) =>
+            company.corpName &&
+            typeof company.corpName === "string" &&
+            company.corpName
+              .trim()
+              .toLowerCase()
+              .includes(searchTerm.trim().toLowerCase())
         );
 
   const loadCompanies = async () => {
     try {
-      const chkLogin = await checkLogin();
-      if (chkLogin) {
-        const data = await getCorporationsWithInterest(); // 서버에서 page별 로딩
-        setCompanyList(data);
-      } else {
-        const data2 = await getCorporationList();
-        const withInterestFalse: CorpWithInterest[] = (data2 ?? []).map(
-          (corp) => ({
-            corporation: corp,
-            interested: false,
-          })
-        );
-        setCompanyList(withInterestFalse);
-      }
+      const data = await getCorporationList(); // 서버에서 page별 로딩
+      setCompanyList(data || []);
     } catch (error) {
       console.error("Error fetching companies:", error);
     }
@@ -77,28 +68,17 @@ const LandingSearchPage = () => {
     if (companyList.length === 0) {
       loadCompanies();
     }
-  }, [isDropdownOpen]);
+  }, [isDropdownOpen, searchTerm]);
 
   const Row = ({ index, style, data }: rowProps) => {
     const company = data[index];
     return (
-      <Box
-        style={style}
-        key={company.corporation.id}
-        display="flex"
-        w="100%"
-        px="5"
-      >
+      <Box style={style} key={company.id} display="flex" w="100%" px="5">
         <Button
           variant="ghost"
           color="black"
           justifyContent="flex-start"
-          onClick={() =>
-            handleCompanyClick(
-              company.corporation.id,
-              company.corporation.corpName
-            )
-          }
+          onClick={() => handleCompanyClick(company.id, company.corpName)}
           onMouseDown={(e) => e.preventDefault()}
           w="100%"
           _hover={{ bg: "gray.50" }}
@@ -106,7 +86,7 @@ const LandingSearchPage = () => {
         >
           <Flex align="center" justify="space-between" width="100%">
             <Text fontSize="md" fontWeight="medium">
-              {company.corporation.corpName}
+              {company.corpName}
             </Text>
             <Icon as={FaArrowRight} color="gray.400" />
           </Flex>
@@ -117,6 +97,7 @@ const LandingSearchPage = () => {
 
   return (
     <Flex direction="column" width="full" align="center" justify="center">
+      <LandingNav />
       <Box textAlign="center" mb="10">
         <Heading as="h1" size="6xl" fontWeight="bold">
           ESG 등급 분석의 시작

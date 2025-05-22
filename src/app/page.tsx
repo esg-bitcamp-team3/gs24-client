@@ -1,18 +1,18 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { Avatar, Box, Flex, useBreakpointValue } from "@chakra-ui/react";
-
+import React, { useEffect, useState, useRef } from "react";
+import { Box, Flex } from "@chakra-ui/react";
 import { motion, Variants } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 
 // 랜딩 페이지 각 섹션 컴포넌트 import
 import LandingSearchPage from "@/components/landing/landingSearchPage";
-import FirstPage from "@/components/landing/firstPage";
 import ESGRatingPage from "@/components/landing/ESGRatingPage";
-import ThirdPage from "@/components/landing/thirdPage";
-import FourthPage from "@/components/landing/fourthPage";
+import KeyWordTrendPage from "@/components/landing/KeyWordTrendPage";
+import SentimentPage from "@/components/landing/SentimentPage";
+import InterestCorporationPage from "@/components/landing/InterestCorporationPage";
 
 const MotionBox = motion(Box);
 
@@ -33,12 +33,6 @@ interface SectionProps {
   children: React.ReactNode;
   id?: string;
 }
-
-import { useRef } from "react";
-import KeyWordTrendPage from "@/components/landing/KeyWordTrendPage";
-import SentimentPage from "@/components/landing/SentimentPage";
-import InterestCorporationPage from "@/components/landing/InterestCorporationPage";
-import { useRouter } from "next/navigation";
 
 // 개별 섹션 구성 함수
 function FullSection({ children, id }: SectionProps) {
@@ -189,6 +183,7 @@ export default function Home() {
         scrollBehavior: "smooth",
       }}
     >
+      {/* <UserIcon /> */}
       {/* 페이지 인디케이터 */}
       <Flex
         direction="column"

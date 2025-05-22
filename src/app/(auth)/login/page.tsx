@@ -1,7 +1,7 @@
-'use client'
+"use client";
 
-import React, {useState} from 'react'
-import {useRouter} from 'next/navigation'
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Box,
   Button,
@@ -11,51 +11,55 @@ import {
   Input,
   Link,
   Stack,
-  Text
-} from '@chakra-ui/react'
-import {login} from '@/lib/api/auth'
-import {toaster} from '@/components/ui/toaster'
-import {ApiError} from '@/lib/util/handleApiError'
+  Text,
+} from "@chakra-ui/react";
+import { login } from "@/lib/api/auth";
+import { toaster } from "@/components/ui/toaster";
+import { ApiError } from "@/lib/util/handleApiError";
 
 const LoginPage = () => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-  const router = useRouter()
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const router = useRouter();
 
   const handleSubmit = async () => {
     if (!username || !password) {
-      setError('모든 필드를 채워주세요.')
-      return
+      setError("모든 필드를 채워주세요.");
+      return;
     }
 
     try {
       await login({
         username: username,
-        password: password // 비밀번호 추가
-      })
+        password: password, // 비밀번호 추가
+      });
       toaster.success({
-        title: '로그인 성공!'
-      })
+        title: "로그인 성공!",
+      });
       // setTimeout(() => console.log('로그인 성공!'), 1000)
 
-      router.push('/dashboard')
+      router.push('/')
+
     } catch (error) {
       toaster.error({
         title:
-          error instanceof ApiError ? error.message : '알 수 없는 오류가 발생했습니다.'
-      })
+          error instanceof ApiError
+            ? error.message
+            : "알 수 없는 오류가 발생했습니다.",
+      });
     }
-  }
+  };
 
   return (
     <Flex
       minH="100vh" // 화면 전체 높이
       justify="center" // 수평 중앙
       align="center" // 수직 중앙
-      bg="  linear-gradient(-225deg, #FFFEFF 0%, #D7FFFE 100%)">
+      bg="  linear-gradient(-225deg, #FFFEFF 0%, #D7FFFE 100%)"
+    >
       <Card.Root
-        boxAlign={'center'}
+        boxAlign={"center"}
         display="flex"
         justifyContent="center"
         paddingLeft={4}
@@ -67,8 +71,14 @@ const LoginPage = () => {
         borderRadius="lg"
         boxShadow="lg"
         borderWidth="1px"
-        borderColor="white">
-        <Box width={{base: '100%', md: '400px'}} bg="transparent" p={8} borderRadius="md">
+        borderColor="white"
+      >
+        <Box
+          width={{ base: "100%", md: "400px" }}
+          bg="transparent"
+          p={8}
+          borderRadius="md"
+        >
           <Heading as="h2" size="3xl" color="black" textAlign="center" mb={8}>
             Sign in
           </Heading>
@@ -81,9 +91,9 @@ const LoginPage = () => {
                 variant="flushed"
                 placeholder=""
                 value={username}
-                onChange={e => setUsername(e.target.value)}
+                onChange={(e) => setUsername(e.target.value)}
                 color="black"
-                _placeholder={{color: 'gray.300'}}
+                _placeholder={{ color: "gray.300" }}
                 borderColor="black"
               />
             </Box>
@@ -97,9 +107,9 @@ const LoginPage = () => {
                 placeholder=""
                 type="password"
                 value={password}
-                onChange={e => setPassword(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
                 color="black"
-                _placeholder={{color: 'gray.300'}}
+                _placeholder={{ color: "gray.300" }}
                 borderColor="black"
               />
             </Box>
@@ -113,10 +123,11 @@ const LoginPage = () => {
             <Button
               bg="black"
               color="white"
-              _hover={{bg: 'gray.500'}}
+              _hover={{ bg: "gray.500" }}
               size="lg"
               fontWeight="bold"
-              onClick={handleSubmit}>
+              onClick={handleSubmit}
+            >
               LOGIN
             </Button>
             <Flex justify="center">
@@ -125,7 +136,8 @@ const LoginPage = () => {
                 color="black"
                 fontSize="sm"
                 textAlign="center"
-                _hover={{textDecoration: 'underline'}}>
+                _hover={{ textDecoration: "underline" }}
+              >
                 Sign Up
               </Link>
             </Flex>
@@ -133,7 +145,7 @@ const LoginPage = () => {
         </Box>
       </Card.Root>
     </Flex>
-  )
-}
+  );
+};
 
-export default LoginPage
+export default LoginPage;

@@ -5,7 +5,7 @@
 이 프로젝트는 개인 투자자와 기업들이 ESG(환경, 사회, 지배구조) 관점에서 기업을 평가하고 투자 의사결정을 내릴 수 있도록 지원하는 ESG 분석 플랫폼입니다. 국내 뉴스 데이터를 수집하여 전처리 과정을 거친 후, 국내 뉴스에 특화된 사전학습 모델인 KoElectra를 활용해 ESG 관련 뉴스의 감정 분석을 수행합니다. 이를 통해 기업의 ESG 이슈를 자동으로 식별하고, 긍정·부정·중립 등 뉴스의 감정 흐름을 분석하여 기업의 ESG 등급을 예측합니다. 투자자는 기업의 재무적 지표뿐 아니라 비재무적 리스크와 지속 가능성을 고려한 의사결정을 도와줍니다.
 
 ### 기술 스택
-- **백엔드:** Spring, Spring Boot
+- **백엔드:** Spring, Spring Boot, Mongo DB
 - **프론트엔드:** Next.js
 - **데이터 분석 및 관리:** D3.js, django, naver openAPI, dart, 한국투자증권 
 
@@ -23,5 +23,18 @@
 
 ### 페이지 상세 설명
 1. **랜딩 페이지**
-![Image](https://github.com/user-attachments/assets/86a8eaa2-fd21-4c09-9236-82da983593b4)
-![Image](https://github.com/user-attachments/assets/fb97eb50-a93d-46db-bb20-732484af9914) 
+
+   ![Image](https://github.com/user-attachments/assets/86a8eaa2-fd21-4c09-9236-82da983593b4)
+
+   ![Image](https://github.com/user-attachments/assets/fb97eb50-a93d-46db-bb20-732484af9914) 
+
+2. **로그인 및 회원가입 페이지**  
+   로그인 및 회원가입 페이지입니다.
+
+   <img src="https://github.com/user-attachments/assets/794ad0e0-135c-4463-b7ce-16128ef1976f" width="50%">
+
+   회원가입 시에는 제공된 기업 코드를 통해 특정 기업의 관리자로 회원가입 할 수 있습니다.
+
+   <img src="https://github.com/user-attachments/assets/794ad0e0-135c-4463-b7ce-16128ef1976f" width="50%">
+
+   

@@ -31,7 +31,7 @@
 2. **로그인 및 회원가입 페이지**  
    로그인 및 회원가입 페이지입니다.
 
-   <div>
+   <div display="inline-block">
       <img src="https://github.com/user-attachments/assets/794ad0e0-135c-4463-b7ce-16128ef1976f" width="50%">
       <img src="https://github.com/user-attachments/assets/c6fd5884-48c1-432b-a7b2-2a4ec19bf158" width="50%">
    </div>

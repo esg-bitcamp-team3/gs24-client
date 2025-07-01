@@ -1,36 +1,27 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ESG 등급 예상 투자 대시보드
 
-## Getting Started
 
-First, run the development server:
+### 개요
+이 프로젝트는 개인 투자자와 기업들이 ESG(환경, 사회, 지배구조) 관점에서 기업을 평가하고 투자 의사결정을 내릴 수 있도록 지원하는 ESG 분석 플랫폼입니다. 국내 뉴스 데이터를 수집하여 전처리 과정을 거친 후, 국내 뉴스에 특화된 사전학습 모델인 KoElectra를 활용해 ESG 관련 뉴스의 감정 분석을 수행합니다. 이를 통해 기업의 ESG 이슈를 자동으로 식별하고, 긍정·부정·중립 등 뉴스의 감정 흐름을 분석하여 기업의 ESG 등급을 예측합니다. 투자자는 기업의 재무적 지표뿐 아니라 비재무적 리스크와 지속 가능성을 고려한 의사결정을 도와줍니다.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### 기술 스택
+- **백엔드:** Spring, Spring Boot
+- **프론트엔드:** Next.js
+- **데이터 분석 및 관리:** D3.js, django, naver openAPI, dart, 한국투자증권 
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 주요 기능
+- **기업 데이터 대시보드:** 기업별 각종 데이터를 시각화하여 쉽게 분석하고 인사이트를 도출할 수 있습니다.
+- **기업 감정 분석:** 해당 기업의 naver 뉴스, 블로그, 카페 글을 분석하여 긍,부정 비율을 시각화해 제공하고 있습니다.
+- **ESG 등급 예측:** 최신 ESG 등급과 뉴스를 활용하여 기업의 다음 등급을 예측 할 수 있습니다.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **기업 상세 페이지:** 해당 기업의 dart에서 가져오는 상세 정보와 주가, 뉴스를 보여줍니다.
+- **ESG 분석 페이지:** ESG 별 등급과 변화 추이 예상 등급을 보여줍니다.
+- **키워드 트렌드 페이지:** 최신 뉴스, 블로그, 카페 글들을 수집하여 감정 분석, 기간 별 기업 언급량 추이, 기업 관련 키워드 시각화, 키워드 관련 뉴스 제공
+- **용어 사전:** ESG 관련 용어 사전 제공, 관련 주제로 필터링 하는 기능 제공합니다.
+- **관심 기업 관리:** 관심이 있는 기업들을 모아서 볼 수 있습니다.
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 페이지 상세 설명
+1. **랜딩 페이지**
+![Image](https://github.com/user-attachments/assets/86a8eaa2-fd21-4c09-9236-82da983593b4)
+![Image](https://github.com/user-attachments/assets/fb97eb50-a93d-46db-bb20-732484af9914) 

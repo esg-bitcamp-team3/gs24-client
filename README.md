@@ -27,6 +27,9 @@ ESG(환경, 사회, 지배구조) 관점에서 기업의 지속가능성과 비�
 
 <img width="661" height="471" alt="image" src="https://github.com/user-attachments/assets/f85a1567-e391-40e6-bf09-6ca40ac2df7e" />
 
+### Auth Server
+<img width="1319" height="313" alt="image" src="https://github.com/user-attachments/assets/99ff372b-95f2-40d8-b4d4-1fcaf1c9ebf8" />
+
 
 ### ESG 점수 예측 시스템 시퀀스 다이어그램
 

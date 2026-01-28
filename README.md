@@ -1,6 +1,6 @@
 # ESG 등급 예상 투자 대시보드
 
-![gs24-server](attachment:c7b5a6d6-37d7-4f08-8dab-80bfce037fac:스크린샷_2025-09-24_오후_4.40.08.png)
+<img width="383" height="661" alt="image" src="https://github.com/user-attachments/assets/679e17ac-155d-4f4a-a582-93d7f93620fe" />
 
 ## 역할
 
